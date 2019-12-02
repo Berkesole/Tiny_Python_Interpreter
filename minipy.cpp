@@ -79,3 +79,101 @@ symbol_item* Search_Symbol(char * cID)
     }
     return NULL;
 }
+
+void* safe_malloc(int size)
+{
+    void* result = malloc(size);
+    if (!result) {
+        printf("Memory not enough!\n");
+        exit(1);
+    }
+    return result;
+}
+
+void copy_stype(stype* src, stype* dst)
+{
+    *dst = *src;
+    // if (dst->type == MyList) {
+    //     dst->new_List = (cList*)safe_malloc(sizeof(cList));
+    //     copy_cList(src->new_List, dst->new_List);
+    // }
+}
+
+void copy_cList(cList* src, cList* dst)
+{
+    *dst = *src;
+    if (dst->type == MyList) {
+        dst->new_List = (cList*)safe_malloc(sizeof(cList));
+        copy_cList(src->new_List, dst->new_List);  
+    }
+}
+
+void free_stype(stype* target)
+{
+    if (target->type == MyList) {
+        free_cList(target->new_List);
+    }
+    free(target);
+}
+
+void free_cList(cList* target)
+{
+    if (target->type == MyList) {
+        free_cList(target->new_List);
+    }
+    if (target->next_element) {
+        free_cList(target->next_element);
+    }
+    free(target);
+}
+
+void free_symbol_item(symbol_item* target)
+{
+    free(target->cID);
+    free_stype(target->stype_items);
+    free(target);
+}
+
+cList* analysis_ListElement(stype* src)
+{
+                            symbol_item* itemtemp = Search_Symbol(src->sListElement.cID);
+                            if(itemtemp==NULL)
+                            {
+                                yyerror("Not defined!");
+                                return NULL;
+                            }
+                            if(Is_Silce == 0)
+                            {                               
+                                stype* temp = itemtemp->stype_items;
+                                if(temp->type!=MyList)
+                                {
+                                    yyerror("this object is not subscriptable");
+                                    return NULL;
+                                }
+                                cList* temp_List = (cList*)safe_malloc(sizeof(cList));
+                                cList* temp_List2 = temp_List;
+                                temp_List->type = MyList;
+                                temp_List->new_List = temp->new_List;
+                                for (int i = 0; i < src->sListElement.place.size(); ++i)
+                                {
+                                    if(temp_List->type!=MyList)
+                                    {
+                                        yyerror("this object is not subscriptable");
+                                        free(temp_List2);
+                                        return NULL;
+                                    }
+                                    temp_List = temp_List->new_List;
+                                    for (int j = 0; j < src->sListElement.place[i]; ++j)
+                                    {
+                                        temp_List = temp_List->next_element;
+                                    }
+                                }
+                                free(temp_List2);
+                                return temp_List;
+                            }
+                            else 
+                            {
+                                stype* temp = itemtemp->slice_TEMP;
+                                
+                            }                               
+}
