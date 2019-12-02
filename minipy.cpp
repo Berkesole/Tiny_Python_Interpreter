@@ -80,6 +80,171 @@ symbol_item* Search_Symbol(char * cID)
     return NULL;
 }
 
+int stype_Add(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            result->iValue = lval->iValue + rval->iValue;
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            if (ltype == Int) {
+                result->dValue = (double)lval->iValue;
+            } else {
+                result->dValue = lval->dValue;
+            }
+            if (rtype == Int) {
+                result->dValue += (double)rval->iValue;
+            } else {
+                result->dValue += rval->dValue;
+            }
+        }
+    } else if ( ltype == String
+             && rtype == String) {
+        result->type = String;
+        result->string_literal = (char *)safe_malloc(sizeof(
+                strlen(lval->string_literal) + strlen(rval->string_literal)
+            ));
+        strcpy(result->string_literal, lval->string_literal);
+        strcat(result->string_literal, rval->string_literal);
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Minus(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            result->iValue = lval->iValue - rval->iValue;
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            if (ltype == Int) {
+                result->dValue = (double)lval->iValue;
+            } else {
+                result->dValue = lval->dValue;
+            }
+            if (rtype == Int) {
+                result->dValue -= (double)rval->iValue;
+            } else {
+                result->dValue -= rval->dValue;
+            }
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Mul(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            result->iValue = lval->iValue * rval->iValue;
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            if (ltype == Int) {
+                result->dValue = (double)lval->iValue;
+            } else {
+                result->dValue = lval->dValue;
+            }
+            if (rtype == Int) {
+                result->dValue *= (double)rval->iValue;
+            } else {
+                result->dValue *= rval->dValue;
+            }
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Div(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        result->type = Double;
+        result->dValue = 0.0;
+        if (ltype == Int) {
+            result->dValue = (double)lval->iValue;
+        } else {
+            result->dValue = lval->dValue;
+        }
+        if (rtype == Int) {
+            if (rval->iValue == 0) {
+                return -1;
+            }
+            result->dValue /= (double)rval->iValue;
+        } else {
+            if (fabs(rval->dValue) < Epsilon) {
+                return -1;
+            }
+            result->dValue /= rval->dValue;
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Mod(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            if (rval->iValue == 0) {
+                return -1;
+            }
+            result->iValue = lval->iValue % rval->iValue;
+            if ((lval->iValue > 0 && rval->iValue < 0) ||
+                (lval->iValue < 0 && rval->iValue > 0)) {
+                if (result->iValue != 0) {
+                    result->iValue += rval->iValue;
+                }
+            }
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            double ldvalue = lval->type == Int ? (double)lval->iValue : lval->dValue;
+            double rdvalue = rval->type == Int ? (double)rval->iValue : rval->dValue;
+            if (fabs(rdvalue) < Epsilon) {
+                return -1;
+            }
+            result->dValue = ldvalue - (int)(ldvalue / rdvalue) * rdvalue;
+            if ((ldvalue > 0 && rdvalue < 0) ||
+                (ldvalue < 0 && rdvalue > 0)) {
+                if (fabs(result->dValue) >= Epsilon) {
+                    result->dValue += rval->dValue;
+                }
+            }
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
 void* safe_malloc(int size)
 {
     void* result = malloc(size);
