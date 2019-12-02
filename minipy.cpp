@@ -70,3 +70,12 @@ void printList(cList* new_List)
     }
     cout << ']' ;
 }
+symbol_item* Search_Symbol(char * cID)
+{
+    for (symbol_item* tmp = symbol_table; tmp; tmp = tmp->next_element) {
+        if (!strcmp(cID, tmp->cID)) {
+            return tmp;
+        }
+    }
+    return NULL;
+}
