@@ -15,8 +15,22 @@
    symbol_item* symbol_table;
    int isAssign;
 %}
-%token ID,INT,REAL,STRING_LITERAL
 
+%token <cID>            ID
+%token <string_literal> STRING_LITERAL
+%token <iValue>         INT
+%token <dValue>         REAL
+
+%type <val>     add_expr
+%type <val>     assignExpr
+%type <val>     factor
+%type <val>     atom
+%type <val>     atom_expr
+%type <val>     mul_expr
+%type <val>     number
+%type <list>    List
+%type <list>    List_items
+%type <str>     opt_comma
 
 %%
 Start : prompt Lines
