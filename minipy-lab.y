@@ -73,10 +73,6 @@ atom    : ID    {
                                 temp->type = String;
                                 temp->string_literal = $1;
                                 $$ = temp;
-                                //$$.type = String;
-                                //cout<<"atom"<<endl;
-                                //$$.string_literal = $1;
-                                //cout<<$$.string_literal<<endl;
                             }
         | List  {
                     $$ = (stype*)safe_malloc(sizeof(stype));
