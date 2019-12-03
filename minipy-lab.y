@@ -7,7 +7,13 @@
    #include <string>
    #include <map>
   
+   #include "minipy.h"
+
    #include "lex.yy.c"
+   using namespace std;
+
+   symbol_item* symbol_table;
+   int isAssign;
 %}
 %token ID,INT,REAL,STRING_LITERAL
 
