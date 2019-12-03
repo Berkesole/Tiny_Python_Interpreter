@@ -36,11 +36,13 @@
 Start : prompt Lines
       ;
 
-Lines : Lines  stat '\n' prompt
-      | Lines  '\n' prompt
-      | 
-      | error '\n' {yyerrok;}
-      ;
+Lines   : Lines stat '\n' prompt
+        | Lines '\n' prompt
+        |
+        | error '\n'    {
+                            yyerrok;
+                        }
+        ;
 
 prompt : {cout << "miniPy> ";}
        ;
