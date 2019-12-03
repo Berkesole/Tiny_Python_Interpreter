@@ -89,9 +89,15 @@ atom    : ID    {
         ;
 
 
-slice_op :  /*  empty production */
-        | ':' add_expr 
-        ;
+slice_op    :  /*  empty production */
+          {
+            $$ = NULL;
+          }
+            | ':' add_expr 
+            {
+              $$ = $1;
+            }
+            ;
 
 sub_expr:  /*  empty production */
         | add_expr
