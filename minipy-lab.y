@@ -62,11 +62,32 @@ factor : '+' factor
        | atom_expr
        ; 
 
-atom  : ID
-      | STRING_LITERAL 
-      | List 
-      | number 
-      ;
+atom    : ID    {
+                    stype* temp = (stype*)safe_malloc(sizeof(stype));
+                    temp->type = Identify;
+                    temp->cID = $1;
+                    $$ = temp;
+                }
+        | STRING_LITERAL    {
+                                stype* temp = (stype*)safe_malloc(sizeof(stype));
+                                temp->type = String;
+                                temp->string_literal = $1;
+                                $$ = temp;
+                                //$$.type = String;
+                                //cout<<"atom"<<endl;
+                                //$$.string_literal = $1;
+                                //cout<<$$.string_literal<<endl;
+                            }
+        | List  {
+                    $$ = (stype*)safe_malloc(sizeof(stype));
+                    $$->type = MyList;
+                    $$->new_List = $1;
+                }
+        | number    {
+                        $$ = $1;
+                    }
+        ;
+
 
 slice_op :  /*  empty production */
         | ':' add_expr 
@@ -121,7 +142,9 @@ void yyerror(char *s)
 }
 
 int yywrap()
-{ return 1; }        		    
+{ 
+  return 1; 
+}        		    
 
 int main()
 {
