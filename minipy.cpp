@@ -288,12 +288,12 @@ void free_cList(cList* target)
     free(target);
 }
 
-void free_symbol_item(symbol_item* target)
-{
-    free(target->cID);
-    free_stype(target->stype_items);
-    free(target);
-}
+//void free_symbol_item(symbol_item* target)
+//{
+//    free(target->cID);
+//    free_stype(target->stype_items);
+//    free(target);
+//}
 
 cList* analysis_ListElement(stype* src)
 {
