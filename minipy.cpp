@@ -111,3 +111,204 @@ void printAssignExpr(stype* show)
     }
 }
 
+void printList(cList* new_List)
+{
+    cout << '[' ;
+    for (cList* temp = new_List; temp; (temp = temp->next_element) ? printf(", ") : 0 ) {
+        switch (temp->type) {
+        case Int:
+            cout << temp->integer;
+            break;
+        case Double: 
+            cout << temp->float_number;
+            if (fabs(temp->float_number - (int)(temp->float_number)) < Epsilon)
+                cout << ".0";
+            break;
+        case String:
+            cout << temp->string_literal;
+            break;
+        case MyList:
+            printList(temp->new_List);
+            break;
+        default:
+            ;
+        }
+    }
+    cout << ']' ;
+}
+
+symbol_item* Search_Symbol(char * cID)
+{
+    for (symbol_item* tmp = symbol_table; tmp; tmp = tmp->next_element) {
+        if (!strcmp(cID, tmp->cID)) {
+            return tmp;
+        }
+    }
+    return NULL;
+}
+
+int stype_Add(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            result->iValue = lval->iValue + rval->iValue;
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            if (ltype == Int) {
+                result->dValue = (double)lval->iValue;
+            } else {
+                result->dValue = lval->dValue;
+            }
+            if (rtype == Int) {
+                result->dValue += (double)rval->iValue;
+            } else {
+                result->dValue += rval->dValue;
+            }
+        }
+    } else if ( ltype == String
+             && rtype == String) {
+        result->type = String;
+        result->string_literal = (char *)safe_malloc(sizeof(
+                strlen(lval->string_literal) + strlen(rval->string_literal)
+            ));
+        strcpy(result->string_literal, lval->string_literal);
+        strcat(result->string_literal, rval->string_literal);
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Minus(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            result->iValue = lval->iValue - rval->iValue;
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            if (ltype == Int) {
+                result->dValue = (double)lval->iValue;
+            } else {
+                result->dValue = lval->dValue;
+            }
+            if (rtype == Int) {
+                result->dValue -= (double)rval->iValue;
+            } else {
+                result->dValue -= rval->dValue;
+            }
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Mul(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            result->iValue = lval->iValue * rval->iValue;
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            if (ltype == Int) {
+                result->dValue = (double)lval->iValue;
+            } else {
+                result->dValue = lval->dValue;
+            }
+            if (rtype == Int) {
+                result->dValue *= (double)rval->iValue;
+            } else {
+                result->dValue *= rval->dValue;
+            }
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Div(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        result->type = Double;
+        result->dValue = 0.0;
+        if (ltype == Int) {
+            result->dValue = (double)lval->iValue;
+        } else {
+            result->dValue = lval->dValue;
+        }
+        if (rtype == Int) {
+            if (rval->iValue == 0) {
+                return -1;
+            }
+            result->dValue /= (double)rval->iValue;
+        } else {
+            if (fabs(rval->dValue) < Epsilon) {
+                return -1;
+            }
+            result->dValue /= rval->dValue;
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int stype_Mod(stype* lval, stype* rval, stype* result)
+{
+    TYPE ltype = lval->type;
+    TYPE rtype = rval->type;
+    if ((ltype == Int || ltype == Double)
+    &&  (rtype == Int || rtype == Double)) {
+        if (ltype == Int && rtype == Int) {
+            result->type = Int;
+            if (rval->iValue == 0) {
+                return -1;
+            }
+            result->iValue = lval->iValue % rval->iValue;
+            if ((lval->iValue > 0 && rval->iValue < 0) ||
+                (lval->iValue < 0 && rval->iValue > 0)) {
+                if (result->iValue != 0) {
+                    result->iValue += rval->iValue;
+                }
+            }
+        } else {
+            result->type = Double;
+            result->dValue = 0.0;
+            double ldvalue = lval->type == Int ? (double)lval->iValue : lval->dValue;
+            double rdvalue = rval->type == Int ? (double)rval->iValue : rval->dValue;
+            if (fabs(rdvalue) < Epsilon) {
+                return -1;
+            }
+            result->dValue = ldvalue - (int)(ldvalue / rdvalue) * rdvalue;
+            if ((ldvalue > 0 && rdvalue < 0) ||
+                (ldvalue < 0 && rdvalue > 0)) {
+                if (fabs(result->dValue) >= Epsilon) {
+                    result->dValue += rval->dValue;
+                }
+            }
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
