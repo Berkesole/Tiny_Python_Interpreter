@@ -312,3 +312,284 @@ int stype_Mod(stype* lval, stype* rval, stype* result)
     return 1;
 }
 
+void* safe_malloc(int size)
+{
+    void* result = malloc(size);
+    if (!result) {
+        printf("Memory not enough!\n");
+        exit(1);
+    }
+    return result;
+}
+
+void copy_stype(stype* src, stype* dst)
+{
+    if(src->type == List_element)
+    {
+        cList* temp = src->new_List;
+        switch(temp->type)
+        {
+            case Int:
+            {
+                dst->type = Int;
+                dst->iValue = temp->integer;
+                break;
+            }
+            case Double:
+            {
+                dst->type = Double;
+                dst->dValue = temp->float_number;
+                break;
+            }
+            case MyList:
+            {
+                dst->type = MyList;
+                dst->new_List = temp->new_List;
+                break;
+            }
+            case String:
+            {
+                dst->type = String;
+                dst->string_literal = (char*)safe_malloc(sizeof(temp->string_literal));
+                strncpy(dst->string_literal, temp->string_literal, strlen(temp->string_literal));
+                break;
+            }
+        }
+    }
+    // else if(src->type == Splite)
+    // {
+    //     dst->type = MyList;
+    //     cList* head = (cList*)safe_malloc(sizeof(cList));
+    //     cList* tail = head;
+    //     cList* temp1 = src->new_List;
+    //     while(temp1)
+    //     {
+    //         cList* temp = temp1->new_List;
+    //         cList* c = (cList*)safe_malloc(sizeof(cList));
+    //         switch(temp->type)
+    //         {
+    //             case Int:
+    //             {
+    //                 c->type = Int;
+    //                 c->integer = temp->integer;
+    //                 break;
+    //             }
+    //             case Double:
+    //             {
+    //                 c->type = Double;
+    //                 c->float_number = temp->float_number;
+    //                 break;
+    //             }
+    //             case MyList:
+    //             {
+    //                 c->type = MyList;
+    //                 c->new_List = temp->new_List;
+    //                 break;
+    //             }
+    //             case string_literal:
+    //             {
+    //                 c->type = String;
+    //                 c->string_literal = (char*)safe_malloc(sizeof(temp->string_literal));
+    //                 strncpy(c->string_literal, temp->string_literal, strlen(temp->string_literal));
+    //                 break;
+    //             }
+    //         }
+    //         temp1 = temp1->next_element;
+    //         tail->next_element = c;
+    //         tail = c;
+    //     }
+    //     tail->next_element = NULL;
+    //     dst->new_List = head->next_element;
+    //     free(head);
+    // }
+    else if(src->type == String)
+    {
+        dst->type = String;
+        dst->string_literal = (char*)safe_malloc(sizeof(src->string_literal));
+        strncpy(dst->string_literal, src->string_literal, strlen(src->string_literal));
+    }
+    else 
+    {
+        *dst = *src;
+    }
+    // if (dst->type == MyList) {
+    //     dst->new_List = (cList*)safe_malloc(sizeof(cList));
+    //     copy_cList(src->new_List, dst->new_List);
+    // }
+}
+
+void copy_cList(cList* src, cList* dst)
+{
+    *dst = *src;
+    if (dst->type == MyList) {
+        dst->new_List = (cList*)safe_malloc(sizeof(cList));
+        copy_cList(src->new_List, dst->new_List);  
+    }
+    else if(dst->type == String)
+    {
+        dst->string_literal = (char*)safe_malloc(sizeof(src->string_literal));
+        strncpy(dst->string_literal, src->string_literal, strlen(src->string_literal));
+    }
+}
+
+void free_stype(stype* target)
+{
+    if (target->type == MyList) {
+        free_cList(target->new_List);
+    }
+    free(target);
+}
+
+void free_cList(cList* target)
+{
+    if (target->type == MyList) {
+        free_cList(target->new_List);
+    }
+    if (target->next_element) {
+        free_cList(target->next_element);
+    }
+    free(target);
+}
+
+void free_symbol_item(symbol_item* target)
+{
+    free(target->cID);
+    free_stype(target->stype_items);
+    free(target);
+}
+
+cList* Stype2Clist(stype* t)
+{
+    cList* list = (cList*)safe_malloc(sizeof(cList));
+    list->next_element = NULL;
+            list->type = t->type;
+            switch(t->type)
+            {
+                case Int:
+                    list->integer = t->iValue;
+                    break;
+                case Double:
+                    list->float_number = t->dValue;
+                    break;
+                case String:
+                    list->string_literal = t->string_literal;
+                    break;
+                case MyList:
+                    list->new_List = t->new_List;
+                    break;
+                case List_element:
+                {
+                    list = t->new_List;
+                    break;
+                } 
+                case Splite:
+                {
+                    list = t->new_List;
+                    break;
+                }
+                case Identify:
+                {
+                    symbol_item* temp = Search_Symbol(t->cID);
+                    stype* temp1 = temp->stype_items;
+                    free(list);
+                    list = Stype2Clist(temp1);
+                    break;
+                }
+            }
+    return list;
+}
+
+stype* MyAppend(stype* src,cList* arglist)
+{
+    //append只接收一个参数
+    if(arglist->next_element!=NULL)
+    {
+        yyerror("TypeError: append() takes exactly one argument");
+        src->type = Error;
+        return src;
+    }
+    if(src->type == Identify)
+    {
+        symbol_item* item = Search_Symbol(src->cID);
+        stype* t = item->stype_items;
+        if(t->type != MyList)
+        {
+            yyerror("A non-list found!");
+            src->type = Error;
+            return src;
+        }
+        cList* temp = t->new_List;
+        while(temp->next_element)
+        {
+            temp = temp->next_element;
+        }
+        temp->next_element = arglist;
+        return src;
+    }
+    else if(src->type == List_element)
+    {
+        cList* temp = src->new_List;
+        if(temp->type != MyList)
+        {
+            yyerror("A non-list found!");
+            src->type = Error;
+            return src;
+        }
+        temp = temp->new_List;
+        while(temp->next_element)
+        {
+            temp = temp->next_element;
+        }
+        temp->next_element = arglist;
+        return src;
+    }
+}
+
+void MyPrint(cList* arglist)
+{
+    if(arglist->next_element!=NULL)
+    {
+        yyerror("TypeError: print() takes exactly one argument");
+        return;
+    }
+    printAssignExpr(arglist->reverse);
+    return;
+
+}
+
+int Mylen(cList* arglist)
+{
+    if(arglist->next_element!= NULL)
+    {
+        yyerror("TypeError: len() takes exactly one argument");
+        return -1;
+    }
+    if(arglist->type == List_element)
+    {
+        arglist = arglist->new_List;
+    }
+    if(arglist->type!=MyList&&arglist->type!=Splite)
+    {
+        yyerror("TypeError: this object has no len()");
+        return -1;
+    }
+    cList* temp = arglist->new_List;
+    int len = 0;
+    while(temp)
+    {
+        len = len + 1;
+        temp = temp->next_element;
+    }
+    return len;
+}
+
+int SizeCaculation(cList* temp)
+{
+    int size = 0;
+    while(temp != NULL)
+    {
+        size++;
+        temp = temp->next_element;
+    }
+    return size;
+}
