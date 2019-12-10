@@ -593,3 +593,282 @@ int SizeCaculation(cList* temp)
     }
     return size;
 }
+
+vector<int> range(int a,int b,int c)
+{
+    std::vector<int> element_index;
+    if(c==0)
+        return element_index;
+    else if(c>0)
+    {
+
+        if(a>=b)
+            return element_index;
+        while(a<b)
+        {
+            element_index.push_back(a);
+            a += c;
+        }
+        return element_index;
+    }
+    else
+    {
+        if(a<=b)
+            return element_index;
+        while(a>b)
+        {
+            element_index.push_back(a);
+            a += c;
+        }
+        return element_index;
+    }
+}
+
+vector<int> MySplite(int a,int b,int c,int len)
+{
+    vector<int> element_index;
+    if(a<0)
+        a+= len;
+    if(b<0)
+        b+= len;
+    if(c==0)
+    {
+        return element_index;
+    }
+    else if(c>0)
+    {
+
+        if(a>=b)
+            return element_index;
+        while(a<b)
+        {
+            element_index.push_back(a);
+            a += c;
+        }
+        return element_index;
+    }
+    else
+    {
+        if(a<=b)
+            return element_index;
+        while(a>b)
+        {
+            element_index.push_back(a);
+            a += c;
+        }
+        return element_index;
+    }
+
+}  
+
+cList* list(cList* arglist)
+{
+    if(arglist->next_element!=NULL)
+    {
+        yyerror("TypeError: list() takes exactly one argument");
+        return NULL;
+    }
+    if(arglist->type == String)
+    {
+        int len = strlen(arglist->string_literal);
+        cList* head = (cList*)safe_malloc(sizeof(cList));
+        cList* tail = head;
+        for (int i = 0; i < len; ++i)
+        {
+            cList* temp = (cList*)safe_malloc(sizeof(cList));
+            temp->type = String;
+            temp->string_literal = (char*)safe_malloc(sizeof(char)*2);
+            temp->string_literal[0] = arglist->string_literal[i];
+            temp->string_literal[1] = '\0';
+            tail->next_element = temp;
+            tail = temp;
+        }
+        tail->next_element = NULL;
+        tail = head->next_element;
+        free(head);
+        return tail;
+    }
+    else if(arglist->type == MyList)//||arglist->type == Splite)
+        return arglist->new_List;
+    else
+    {
+        yyerror("TypeError: this object is not iterable");
+        return NULL;
+    }
+}
+
+void assign_clist(cList *src, cList *dst)
+{
+    switch(src->type)
+    {
+        case Int:
+        {
+            dst->type = Int;
+            dst->integer = src->integer;
+            break;
+        }
+        case Double:
+        {
+            dst->type = Double;
+            dst->float_number = src->float_number;
+            break;
+        }
+        case MyList:
+        {
+            dst->type = MyList;
+            dst->new_List = src->new_List;
+            break;
+        }
+        case String:
+        {
+            dst->type = String;
+            dst->string_literal = (char*)safe_malloc(sizeof(src->string_literal));
+            strncpy(dst->string_literal, src->string_literal, strlen(src->string_literal));
+            break;
+        }
+    }
+}
+
+// void memmove_Slice(stype *src, stype *dst, int offset)
+// {
+//  cList *__shlstart = src->new_List;
+
+
+//  if(offset < 0) //左移
+//  {
+//      offset = abs(offset);
+//  }
+//  else //右移
+//  {
+
+//  }
+// }
+
+void shl_Slice(stype *src, stype *dst,int offset)
+{
+    offset = abs(offset);
+    cList *__shlstart = src->new_List;
+    int size = dst->slice_index.size();
+    for(int i = 0; i < dst->slice_index[0]; i++)
+    {
+        __shlstart = __shlstart -> next_element;//记录切片的第一个结点
+    }
+    cList *temp_start = __shlstart;
+    cList *temp_end = __shlstart;
+
+    for (int i = 0; i < size - offset; i++)
+    {
+        temp_start = temp_start->next_element; //记录左移后删除的最后一个结点
+    }
+    for (int i = 0; i < size; i++)
+    {
+        temp_end = temp_end->next_element;
+    }
+    if() assign_clist(temp_end,temp_start);
+    temp_start->next_element = temp_end->next_element;
+}
+
+void shr_Slice(stype *src, stype *dst,int offset)
+{
+    cList *__shrstart = src->new_List;
+    int size = dst->slice_index.size();
+    for(int i = 0; i < dst->slice_index[size]; i++)
+    {
+        __shrstart = __shrstart -> next_element;//记录切片的最后一个结点，开始右移的前一个位置
+    }
+    cList *temp = __shrstart->next_element; 
+    for(int i = 0; i < offset; i++)
+    {
+        cList *NEWCLIST = (cList*)safe_malloc(sizeof(cList));
+        temp = __shrstart->next_element;
+        __shrstart->next_element = NEWCLIST;
+        NEWCLIST->next_element = temp;
+    }
+}
+
+cList* Copy_Slice(cList *src)
+{
+    cList *dst = (cList*)safe_malloc(sizeof(cList));
+    dst->next_element = NULL;
+    dst->type = src->type;
+    switch(src->type)
+    {
+        case Int:
+        {
+            dst->integer = src->integer;
+            break;
+        }
+        case Double:
+        {
+            dst->float_number = src->float_number;
+            break;
+        }
+        case MyList:
+        {
+            dst->new_List = src->new_List;
+            break;
+        }
+        case String:
+        {
+            dst->string_literal = (char*)safe_malloc(sizeof(src->string_literal));
+            strncpy(dst->string_literal, src->string_literal, strlen(src->string_literal));
+            break;
+        }
+    }
+    return dst; 
+}
+
+
+// cList* Slice_Open(cList *temp,)
+// {
+//     cList* temp_start = temp;    //起始的逻辑位置     
+//     cList* temp_end = temp;      //终止的逻辑位置       
+//     int step = 0;                        //步长         
+//     int __size__ = 0;
+    
+//     if($6 != NULL)                       //步长初始化
+//         step = $6->iValue;
+//     else step = 1;
+//     __size__ = SizeCaculation(temp); //统计list大小，用于计算负参数表达的逻辑位置
+
+//     /*负方向参数转化为正方向相对位置*/                            
+//     int __Start_index =$3->iValue + __size__;
+//     int __End_index = $5->iValue + __size__; 
+
+
+// }
+// cList* analysis_ListElement(stype* src)
+// {
+//                             symbol_item* itemtemp = Search_Symbol(src->sListElement.cID);
+//                             if(itemtemp==NULL)
+//                             {
+//                                 yyerror("Not defined!");
+//                                 return NULL;
+//                             }
+//                             stype* temp = itemtemp->stype_items;
+//                             if(temp->type!=MyList)
+//                             {
+//                                 yyerror("this object is not subscriptable");
+//                                 return NULL;
+//                             }
+//                             cList* temp_List = (cList*)safe_malloc(sizeof(cList));
+//                             cList* temp_List2 = temp_List;
+//                             temp_List->type = MyList;
+//                             temp_List->new_List = temp->new_List;
+//                             for (int i = 0; i < src->sListElement.place.size(); ++i)
+//                             {
+//                                 if(temp_List->type!=MyList)
+//                                 {
+//                                     yyerror("this object is not subscriptable");
+//                                     free(temp_List2);
+//                                     return NULL;
+//                                 }
+//                                 temp_List = temp_List->new_List;
+//                                 for (int j = 0; j < src->sListElement.place[i]; ++j)
+//                                 {
+//                                     temp_List = temp_List->next_element;
+//                                 }
+//                             }
+//                             free(temp_List2);
+//                             return temp_List;
+// }
