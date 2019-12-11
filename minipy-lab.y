@@ -50,10 +50,370 @@ prompt : {cout << "miniPy> ";}
 stat  : assignExpr
       ;
 
-assignExpr:
-        atom_expr '=' assignExpr
-      | add_expr 
-      ;
+assignExpr  : atom_expr '=' assignExpr {
+                                            if ($1->type == Identify) {
+                                                if ($3->type != Identify) {
+                                                    symbol_item* item = (symbol_item*)safe_malloc(sizeof(symbol_item));
+                                                    item->cID = $1->cID;
+                                                    item->stype_items = (stype*)safe_malloc(sizeof(stype));
+                                                    copy_stype($3, item->stype_items);
+                                                    item->next_element = NULL;
+                                                    symbol_item* temp = symbol_table;
+                                                    int flag = 0;
+                                                    //标识是否$1标识符已经在符号表中
+                                                    if(!temp) {
+                                                        temp = item;
+                                                    } else {
+                                                        while(temp->next_element) {
+                                                            temp = temp->next_element;
+                                                            if(!strcmp(temp->cID,$1->cID)) {
+                                                                //已经存在
+                                                                flag = 1;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if(!flag) {
+                                                            temp->next_element = item;
+                                                        } else {
+                                                            free(temp->stype_items);
+                                                            temp->stype_items = item->stype_items;
+                                                        }  
+                                                    }
+                                                } else {
+                                                    symbol_item* temp = symbol_table;
+                                                    stype* temp2;
+                                                    int flag = 0;
+                                                    while(temp) {
+                                                        if(!strcmp(temp->cID, $3->cID)) {
+                                                            //同一个标识符
+                                                            temp2 = temp->stype_items;
+                                                            flag = 1;
+                                                            break;
+                                                        }
+                                                        temp = temp->next_element;                                            
+                                                    }
+                                                    if(flag == 0) {
+                                                        //cout<<$3->cID<<"is";
+                                                        yyerror("Not defined");
+                                                    }
+                                                    symbol_item* item = (symbol_item*)safe_malloc(sizeof(symbol_item));
+                                                    item->cID = $1->cID;
+                                                    item->stype_items = new stype();
+                                                    item->stype_items->type = temp2->type;
+                                                    switch(temp2->type) {
+                                                        case Int:
+                                                            item->stype_items->iValue = temp2->iValue;
+                                                            break;
+                                                        case Double:
+                                                            item->stype_items->dValue = temp2->dValue;
+                                                            break;
+                                                        case String:
+                                                            item->stype_items->string_literal = (char*)safe_malloc(sizeof(temp2->string_literal));
+                                                            strncpy(item->stype_items->string_literal, temp2->string_literal, strlen(temp2->string_literal));
+                                                            break;
+                                                        case MyList:
+                                                            item->stype_items->new_List = temp2->new_List;
+                                                            break;
+                                                        default:
+                                                            ;
+                                                    }
+                                                    //item->stype_items = &(temp2); //悬空引用了，需要大改成stype*
+                                                    item->next_element = NULL;
+                                                    temp = symbol_table;
+                                                    flag = 0;//重置
+                                                    if(!temp) {
+                                                        temp = item;
+                                                    } else {
+                                                        while(temp->next_element) {
+                                                            temp = temp->next_element;
+                                                            if(!strcmp(temp->cID,$1->cID))
+                                                                {
+                                                                //已经存在
+                                                                flag = 1;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if(!flag) {
+                                                            temp->next_element = item;
+                                                        } else {
+                                                            free(temp->stype_items);
+                                                            temp->stype_items = item->stype_items;
+                                                        }
+                                                    }
+
+                                                }
+                                                $$ = $3;
+                                                isAssign = 0;
+                                            } 
+                                            else if($1->type == List_element)
+                                            {
+                                                stype* t = $1;
+                                                cList* temp_List = $1->new_List;
+                                                //cList* temp_List = analysis_ListElement($1);
+                                                if(temp_List != NULL)
+                                                {
+                                                    if($3->type == Identify)
+                                                    {
+                                                        symbol_item* temp_sys = Search_Symbol($3->cID);
+                                                        if(temp_sys == NULL)
+                                                        {
+                                                            yyerror("Not defined");
+                                                        } 
+                                                        else
+                                                        {
+                                                            if(temp_List->type == String)
+                                                            {
+                                                                free(temp_List->string_literal);
+                                                            }
+                                                            else if(temp_List->type == MyList)
+                                                            {
+                                                                //free_cList(temp_List->new_List);
+                                                            }
+                                                            stype* temp_stype = temp_sys->stype_items;
+                                                            temp_List->type = temp_stype->type;
+                                                            switch(temp_stype->type)
+                                                            {
+                                                                case Int: temp_List->integer = temp_stype->iValue;break;
+                                                                case Double: temp_List->float_number = temp_stype->dValue;break;
+                                                                case String: 
+                                                                    temp_List->string_literal = (char*)safe_malloc(sizeof(temp_stype->string_literal));
+                                                                    strncpy(temp_List->string_literal, temp_stype->string_literal, strlen(temp_stype->string_literal));
+                                                                    break;
+                                                                case MyList: temp_List->new_List = temp_stype->new_List;break;
+                                                                default:;
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if(temp_List->type == String)
+                                                        {
+                                                            free(temp_List->string_literal);
+                                                        }
+                                                        else if(temp_List->type == MyList)
+                                                        {
+                                                            //free_cList(temp_List->new_List);
+                                                        }
+                                                        temp_List->type = $3->type;
+                                                        switch($3->type)
+                                                        {
+                                                            case Int: temp_List->integer = $3->iValue;break;
+                                                            case Double: temp_List->float_number = $3->dValue;break;
+                                                            case String: 
+                                                                temp_List->string_literal = (char*)safe_malloc(sizeof($3->string_literal));
+                                                                strncpy(temp_List->string_literal, $3->string_literal, strlen($3->string_literal));
+                                                                break;
+                                                            case MyList: temp_List->new_List = $3->new_List;break;
+                                                            default:;
+                                                        }
+                                                    }
+                                                }
+                                                isAssign = 0;
+                                            }
+                                            else if($1->type == MyList)
+                                            {
+                                                //slice
+                                                stype *_stype = $1;
+                                                stype *preslice = $1->head_stype;
+                                                if(preslice->type == Identify)
+                                                {        
+                                                    symbol_item* item = Search_Symbol(preslice->cID);
+                                                    preslice = item->stype_items;
+                                                }
+                                                if ($1->head_stype == NULL) //step == 0
+                                                {
+                                                    yyerror("ValueError: attempt to assign sequence size is not match extended silce size");
+                                                }
+                                                if($3->type == Identify)
+                                                {
+                                                    symbol_item *temp_sys = Search_Symbol($3->cID);
+                                                    if(temp_sys == NULL)
+                                                    {
+                                                        yyerror("Not defined");
+                                                    }
+                                                    else 
+                                                    {
+                                                        stype *temp_stype = temp_sys->stype_items;
+
+                                                        if(temp_stype->type == Int || temp_stype->type == Double)
+                                                        {
+                                                            yyerror("TypeError: can only assign an iterable");                                                          
+                                                        }                                             
+                                                        else if(temp_stype->type == String)
+                                                        {
+                                                            cList *str_clist = list(Stype2Clist($3));
+                                                            int n = SizeCaculation(str_clist);//赋值list的大小
+                                                            int norig = _stype->slice_index.size();      //被赋值list的大小   
+                                                            
+                                                            int d = n - norig; // offset
+                                                            if(d < 0)
+                                                            {
+                                                                shl_Slice(preslice,_stype,d);
+                                                                cList *start_cList = preslice->new_List;                                                                
+                                                                cList *__point = str_clist;   //指向右值
+                                                                for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                    start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                                for(int i = 0; i < n; i++)
+                                                                {
+                                                                    assign_clist(__point,start_cList);
+                                                                    start_cList = start_cList->next_element;
+                                                                    __point = __point->next_element; 
+                                                                }                                                               
+                                                            }
+                                                            else if(d >= 0)
+                                                            {
+                                                                shr_Slice(preslice,_stype,d);
+
+                                                                cList *start_cList = preslice->new_List;
+                                                                cList *__point = str_clist;   //指向右值
+                                                                for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                    start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                                for(int i = 0; i < n; i++)
+                                                                {
+                                                                    assign_clist(__point,start_cList);
+                                                                    start_cList = start_cList->next_element;
+                                                                    __point = __point->next_element;
+                                                                }
+                                                            }
+                                                        }                                                                                                                                                                                                            
+                                                        else if(temp_stype->type == MyList)
+                                                        {
+                                                            int n = SizeCaculation(temp_stype->new_List);//赋值list的大小
+                                                            int norig = _stype->slice_index.size();      //被赋值list的大小
+
+                                                            int d = n - norig; // offset
+                                                            if(d < 0)
+                                                            {
+                                                                shl_Slice(preslice,_stype,d);
+                                                                cList *start_cList = preslice->new_List;                                                                
+                                                                cList *__point = temp_stype->new_List;   //指向右值
+                                                                for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                    start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                                if(start_cList == NULL)
+                                                                {
+                                                                    preslice->new_List = __point;
+                                                                }
+                                                                else
+                                                                {
+                                                                    for(int i = 0; i < n; i++)
+                                                                    {
+                                                                        assign_clist(__point,start_cList);
+                                                                        start_cList = start_cList->next_element;
+                                                                        __point = __point->next_element; 
+                                                                    } 
+                                                                }
+                                                                                                                    
+                                                            }
+                                                            else if(d >= 0)
+                                                            {
+                                                                shr_Slice(preslice,_stype,d);
+                                                                cList *start_cList = preslice->new_List;
+                                                                cList *__point = temp_stype->new_List;   //指向右值
+                                                                for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                    start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                                for(int i = 0; i < n; i++)
+                                                                {
+                                                                    assign_clist(__point,start_cList);
+                                                                    start_cList = start_cList->next_element;
+                                                                    __point = __point->next_element; 
+                                                                }
+                                                            }
+                                                        }                                                       
+                                                    }
+                                                }
+                                                else 
+                                                {
+                                                    stype *temp_stype = $3;
+                                                    if(temp_stype->type == Int || temp_stype->type == Double)
+                                                    {
+                                                        yyerror("TypeError: can only assign an iterable");                                                          
+                                                    }
+                                                    else if(temp_stype->type == String)
+                                                    {                                                       
+                                                        cList *str_clist = list(Stype2Clist($3));
+                                                        int n = SizeCaculation(str_clist);           //赋值list的大小
+                                                        int norig = _stype->slice_index.size();      //被赋值list的大小
+
+                                                        int d = n - norig; // offset
+                                                        if(d < 0)
+                                                        {
+                                                            shl_Slice(preslice,_stype,d);
+                                                            cList *start_cList = preslice->new_List;                                                                
+                                                            cList *__point = str_clist;   //指向右值
+                                                            for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                            for(int i = 0; i < n; i++)
+                                                            {
+                                                                assign_clist(__point,start_cList);
+                                                                start_cList = start_cList->next_element;
+                                                                __point = __point->next_element; 
+                                                            }                                                               
+                                                        }
+                                                        else if(d >= 0)
+                                                        {
+                                                            shr_Slice(preslice,_stype,d);
+                                                            cList *start_cList = preslice->new_List;
+                                                            cList *__point = str_clist;   //指向右值
+                                                            for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                            for(int i = 0; i < n; i++)
+                                                            {
+                                                                assign_clist(__point,start_cList);
+                                                                start_cList = start_cList->next_element;
+                                                                __point = __point->next_element; 
+                                                            }
+                                                        }
+                                                    }
+                                                    else if(temp_stype->type == MyList)
+                                                    {
+                                                        int n = SizeCaculation(temp_stype->new_List);//赋值list的大小
+                                                        int norig = _stype->slice_index.size();      //被赋值list的大小
+
+                                                        int d = n - norig; // offset
+                                                        if(d < 0)
+                                                        {
+                                                            shl_Slice(preslice,_stype,d);
+                                                            cList *start_cList = preslice->new_List;
+                                                            cList *__point = temp_stype->new_List;   //指向右值
+                                                            for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                            for(int i = 0; i < n; i++)
+                                                            {
+                                                                assign_clist(__point,start_cList);
+                                                                start_cList = start_cList->next_element;
+                                                                __point = __point->next_element; 
+                                                            }                                                               
+                                                        }
+                                                        else if(d >= 0)
+                                                        {
+                                                            shr_Slice(preslice,_stype,d);
+                                                            cList *start_cList = preslice->new_List;
+                                                            cList *__point = temp_stype->new_List;   //指向右值
+                                                            for(int i = 0; i < _stype->slice_index[0]; i++) 
+                                                                start_cList = start_cList->next_element;//找到切片赋值的起始位置
+                                                            for(int i = 0; i < n; i++)
+                                                            {
+                                                                assign_clist(__point,start_cList);
+                                                                start_cList = start_cList->next_element;
+                                                                __point = __point->next_element; 
+                                                            }
+                                                        }
+                                                    } 
+                                                }
+                                                isAssign = 0;
+                                            }
+                                            else 
+                                            {
+                                                yyerror("can't assign to this type");
+                                            }
+                                        }
+            | add_expr  {
+                            //printAssignExpr($1);
+                            $$ = $1;
+                            stype* temp = $1;
+                            isAssign = 1;
+                        }
+            ;
 
 number : INT
        | REAL
