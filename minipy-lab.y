@@ -33,8 +33,8 @@
 %type <str>     opt_comma
 
 %%
-Start : prompt Lines
-      ;
+Start   : prompt Lines
+        ;
 
 Lines   : Lines stat '\n' prompt
         | Lines '\n' prompt
@@ -44,11 +44,18 @@ Lines   : Lines stat '\n' prompt
                         }
         ;
 
-prompt : {cout << "miniPy> ";}
-       ;
+prompt  :   {
+                cout << "miniPy> " ;
+            }
+        ;
 
-stat  : assignExpr
-      ;
+stat    : assignExpr    {
+                            if (isAssign) {
+                                printAssignExpr($1);
+                                cout<<endl;
+                            }
+                        }
+        ;
 
 assignExpr  : atom_expr '=' assignExpr {
                                             if ($1->type == Identify) {
