@@ -472,7 +472,7 @@ atom_expr   : atom  {
                         $$ = $1;
                     }
             
-            | atom_expr  '[' sub_expr  ':' sub_expr  slice_op ']'
+| atom_expr  '[' sub_expr  ':' sub_expr  slice_op ']'
             {
                 $$ = (stype*)safe_malloc(sizeof(stype));
                 $$->type = MyList;
@@ -505,22 +505,22 @@ atom_expr   : atom  {
 
                     if($6 == NULL) 
                     {
-                        $6 = (stype*)safe_malloc(sizeof(stype));
-                        $6->type = Int;
-                        $6->iValue = 1;
+                    	$6 = (stype*)safe_malloc(sizeof(stype));
+                    	$6->type = Int;
+                    	$6->iValue = 1;
                     }
                     if($3 == NULL)
                     {
-                        $3 = (stype*)safe_malloc(sizeof(stype));
-                        $3->type = Int;
-                        $3->iValue = 0;
-                    }                       
+                    	$3 = (stype*)safe_malloc(sizeof(stype));
+                    	$3->type = Int;
+                    	$3->iValue = 0;
+                    }                    	
                     if($5 == NULL) 
                     {
-                        $5 = (stype*)safe_malloc(sizeof(stype));
-                        $5->type = Int;
-                        $5->iValue = SizeCaculation(__item->new_List);
-                    }
+                    	$5 = (stype*)safe_malloc(sizeof(stype));
+                    	$5->type = Int;
+						$5->iValue = SizeCaculation(__item->new_List);
+					}
 
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue,SizeCaculation(__item->new_List));
 
@@ -537,9 +537,9 @@ atom_expr   : atom  {
                     else
                     {
                         int flag = 0;// a trick
-                        for (int i = 0; i < element_index.size(); i++)                          
+                        for (int i = 0; i < element_index.size(); i++)                        	
                         {   
-                            temp = __item->new_List;
+                        	temp = __item->new_List;
                             for (int j = 0; j < element_index[i]; j++)
                             {
                                 temp = temp->next_element;
@@ -547,13 +547,13 @@ atom_expr   : atom  {
                             temp1 = Copy_Slice(temp);
                             if (flag == 1)
                             {
-                                temp2->next_element = temp1;
-                                temp2 = temp2->next_element;
+	                            temp2->next_element = temp1;
+	                            temp2 = temp2->next_element;
                             }
                             else 
                             {
                                 temp2 = temp1;
-                                temp3 = temp2;                                
+                            	temp3 = temp2;                                
                                 flag = 1;
                             }                                                                            
                         }
@@ -563,10 +563,10 @@ atom_expr   : atom  {
                     if (step == 1) $$->head_stype = $1;
                     $$->slice_index.assign(element_index.begin(),element_index.end());
                     if($3->iValue == $5->iValue) 
-                        {
-                            $$->slice_index.push_back($3->iValue);
-                            $$->slice_index.push_back(0);
-                        }
+                    	{
+                    		$$->slice_index.push_back($3->iValue);
+                			$$->slice_index.push_back(0);
+                		}
 
                 }                
                 else if($1->type == List_element)
@@ -584,22 +584,22 @@ atom_expr   : atom  {
                     }
                     if($6 == NULL) 
                     {
-                        $6 = (stype*)safe_malloc(sizeof(stype));
-                        $6->type = Int;
-                        $6->iValue = 1;
+                    	$6 = (stype*)safe_malloc(sizeof(stype));
+                    	$6->type = Int;
+                    	$6->iValue = 1;
                     }
                     if($3 == NULL)
                     {
-                        $3 = (stype*)safe_malloc(sizeof(stype));
-                        $3->type = Int;
-                        $3->iValue = 0;
-                    }                       
+                    	$3 = (stype*)safe_malloc(sizeof(stype));
+                    	$3->type = Int;
+                    	$3->iValue = 0;
+                    }                    	
                     if($5 == NULL) 
                     {
-                        $5 = (stype*)safe_malloc(sizeof(stype));
-                        $5->type = Int;
-                        $5->iValue = SizeCaculation($1->new_List->new_List->new_List);
-                    }                    
+                    	$5 = (stype*)safe_malloc(sizeof(stype));
+                    	$5->type = Int;
+						$5->iValue = SizeCaculation($1->new_List->new_List->new_List);
+					}                    
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue,SizeCaculation($1->new_List->new_List->new_List));
 
                     // cout << $3->iValue << "," << $5->iValue << "," << SizeCaculation()<< endl;
@@ -627,7 +627,7 @@ atom_expr   : atom  {
                         int flag = 0;// a trick
                         for (int i = 0; i < element_index.size(); i++)
                         {   
-                            temp = $1->new_List->new_List;
+                        	temp = $1->new_List->new_List;
                             for (int j = 0; j < element_index[i]; j++)
                             {
                                 temp = temp->next_element;
@@ -635,8 +635,8 @@ atom_expr   : atom  {
                             temp1 = Copy_Slice(temp);
                             if (flag == 1)
                             {
-                                temp2->next_element = temp1;
-                                temp2 = temp2->next_element;
+	                            temp2->next_element = temp1;
+	                            temp2 = temp2->next_element;
                             }
                             else 
                             {
@@ -651,15 +651,15 @@ atom_expr   : atom  {
                     else $$->new_List = NULL;
                     if (step == 1) 
                     {
-                        $$->head_stype = $1;
-                        $$->head_stype->new_List = $$->head_stype->new_List->new_List;
+                		$$->head_stype = $1;
+                		$$->head_stype->new_List = $$->head_stype->new_List->new_List;
                     }
                     $$->slice_index.assign(element_index.begin(),element_index.end());                  
                     if($3->iValue == $5->iValue) 
-                        {
-                            $$->slice_index.push_back($3->iValue);
-                            $$->slice_index.push_back(0);
-                        }
+                    	{
+                    		$$->slice_index.push_back($3->iValue);
+                			$$->slice_index.push_back(0);
+                		}
                 }
                 else if($1->type == MyList)
                 {    
@@ -671,22 +671,22 @@ atom_expr   : atom  {
 
                     if($6 == NULL) 
                     {
-                        $6 = (stype*)safe_malloc(sizeof(stype));
-                        $6->type = Int;
-                        $6->iValue = 1;
+                    	$6 = (stype*)safe_malloc(sizeof(stype));
+                    	$6->type = Int;
+                    	$6->iValue = 1;
                     }
                     if($3 == NULL)
                     {
-                        $3 = (stype*)safe_malloc(sizeof(stype));
-                        $3->type = Int;
-                        $3->iValue = 0;
-                    }                       
+                    	$3 = (stype*)safe_malloc(sizeof(stype));
+                    	$3->type = Int;
+                    	$3->iValue = 0;
+                    }                    	
                     if($5 == NULL) 
                     {
-                        $5 = (stype*)safe_malloc(sizeof(stype));
-                        $5->type = Int;
-                        $5->iValue = SizeCaculation($1->new_List);
-                    }
+                    	$5 = (stype*)safe_malloc(sizeof(stype));
+                    	$5->type = Int;
+						$5->iValue = SizeCaculation($1->new_List);
+					}
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue ,SizeCaculation($1->new_List));
 
                     int step = $6->iValue;
@@ -704,7 +704,7 @@ atom_expr   : atom  {
                         int flag = 0;// a trick
                         for (int i = 0; i < element_index.size(); i++)
                         {   
-                            temp = $1->new_List;
+                        	temp = $1->new_List;
                             for (int j = 0; j < element_index[i]; j++)
                             {
                                 temp = temp->next_element;
@@ -712,8 +712,8 @@ atom_expr   : atom  {
                             temp1 = Copy_Slice(temp);
                             if (flag == 1)
                             {
-                                temp2->next_element = temp1;
-                                temp2 = temp2->next_element;
+	                            temp2->next_element = temp1;
+	                            temp2 = temp2->next_element;
                             }
                             else 
                             {
@@ -729,12 +729,14 @@ atom_expr   : atom  {
                     if(step == 1) $$->head_stype = $1;
                     $$->slice_index.assign(element_index.begin(),element_index.end());
                     if($3->iValue == $5->iValue) 
-                    {
-                        $$->slice_index.push_back($3->iValue);
-                        $$->slice_index.push_back(0);
-                    }             
+                    	{
+                    		$$->slice_index.push_back($3->iValue);
+                			$$->slice_index.push_back(0);
+                		}
+                }               
                 endListElement1:
                     //free($1);
+                    //stype* temp = $$;
                     free($3);
                     free($5);
                     free($6);
