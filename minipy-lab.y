@@ -1,20 +1,32 @@
 %{
-   /* definition */
-   #include <stdio.h>
-   #include <ctype.h>
-   using namespace std;
-   #include <iostream>
-   #include <string>
-   #include <map>
-  
-   #include "minipy.h"
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <math.h>
+    #include <ctype.h>
+    #include <iostream>
+    #include <map>
+    #include <string>
+    #include <assert.h>
 
-   #include "lex.yy.c"
-   using namespace std;
+    #include "minipy.h"
 
-   symbol_item* symbol_table;
-   int isAssign;
+    #include "lex.yy.c"
+    using namespace std;
+
+    symbol_item* symbol_table;
+    int isAssign;
 %}
+
+%union{
+    stype*  val;            //指针
+    cList*  list;
+    int     iValue;
+    double  dValue;
+    char    str;            //字符，匹配'\n'
+    char*   cID;            //标识符
+    char*   string_literal; //字符串
+
+};
 
 %token <cID>            ID
 %token <string_literal> STRING_LITERAL
@@ -31,8 +43,11 @@
 %type <list>    List
 %type <list>    List_items
 %type <str>     opt_comma
-
+%type <list>    arglist
+%type <val>     slice_op
+%type <val>     sub_expr
 %%
+
 Start   : prompt Lines
         ;
 
