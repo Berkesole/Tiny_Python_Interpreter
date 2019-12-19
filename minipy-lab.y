@@ -935,10 +935,6 @@ mul_expr : mul_expr '*' factor
 
 %%
 
-void yyerror(char *s)
-{
-   cout << s << endl<<"miniPy> "; 
-}
 
 int yywrap()
 { 
