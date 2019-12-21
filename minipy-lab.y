@@ -437,9 +437,20 @@ assignExpr  : atom_expr '=' assignExpr {
                         }
             ;
 
-number : INT
-       | REAL
-       ;
+number  : INT   {   //stype
+                    stype* temp = (stype*)safe_malloc(sizeof(stype));
+                    temp->type = Int;
+                    temp->iValue = $1;
+                    $$ = temp;//指针
+                }
+        | REAL  {
+                    stype* temp = (stype*)safe_malloc(sizeof(stype));
+                    temp->type = Double;
+                    temp->dValue = $1;
+                    $$ = temp;
+                    // $$.type = Double; $$.dValue = $1;
+                }
+        ;
 
 factor : '+' factor
        | '-' factor
