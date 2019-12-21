@@ -479,7 +479,18 @@ factor  : '+' factor    {
                                 goto endFactor;
                             $$ = (stype*)safe_malloc(sizeof(stype));
                             $$->type = temp_List->type;
-
+                            switch(temp_List->type)
+                            {
+                                case Int: $$->iValue = temp_List->integer;break;
+                                case Double: $$->dValue = temp_List->float_number;break;
+                                case String: 
+                                    $$->string_literal = (char*)safe_malloc(sizeof(temp_List->string_literal));
+                                    strncpy($$->string_literal, temp_List->string_literal, strlen(temp_List->string_literal));
+                                    break;
+                                case MyList: $$->new_List = temp_List->new_List;break;
+                                default:;
+                            }
+                            free($1);
                         }
                         else
                         {
