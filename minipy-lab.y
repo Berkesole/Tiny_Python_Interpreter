@@ -452,10 +452,24 @@ number  : INT   {   //stype
                 }
         ;
 
-factor : '+' factor
-       | '-' factor
-       | atom_expr
-       ; 
+factor  : '+' factor    {
+                            $$ = $2;
+                        }
+        | '-' factor    {
+                            $$ = (stype*)safe_malloc(sizeof(stype));
+                            $$->type = $2->type;
+                            switch ($$->type) {
+                                case Int:
+                                    $$->iValue = -1*$2->iValue;
+                                    break;
+                                case Double:
+                                    $$->dValue = -1*$2->dValue;
+                                    break;
+                                default:
+                                    ;
+                                }
+                            free($2);
+                        }                    
 
 atom    : ID    {
                     stype* temp = (stype*)safe_malloc(sizeof(stype));
