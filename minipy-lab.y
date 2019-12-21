@@ -469,7 +469,26 @@ factor  : '+' factor    {
                                     ;
                                 }
                             free($2);
-                        }                    
+                        }
+        | atom_expr {
+                        if($1->type == List_element)
+                        {
+                            //cList* temp_List = analysis_ListElement($1);
+                            cList* temp_List = $1->new_List;
+                            if(temp_List==NULL)
+                                goto endFactor;
+                            $$ = (stype*)safe_malloc(sizeof(stype));
+                            $$->type = temp_List->type;
+
+                        }
+                        else
+                        {
+                            $$ = $1;
+                        }
+                        endFactor:
+                        ;
+                    }
+                    ;                                             
 
 atom    : ID    {
                     stype* temp = (stype*)safe_malloc(sizeof(stype));
