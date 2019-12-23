@@ -672,15 +672,6 @@ atom_expr   : atom  {
 					}                    
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue,SizeCaculation($1->new_List->new_List->new_List));
 
-                    // cout << $3->iValue << "," << $5->iValue << "," << SizeCaculation()<< endl;
-                    // for (int i = 0; i < element_index.size(); ++i)
-                    // {
-                    //     cout << element_index[i] << ",";
-                    // }
-                    // cout <<""<<endl;
-                    // int test;
-                    // cin >> test;
-
                     int step = $6->iValue;
                     cList *temp = $1->new_List->new_List;
                     cList *temp1 = $1->new_List->new_List;
