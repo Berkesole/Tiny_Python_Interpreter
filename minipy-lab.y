@@ -822,20 +822,23 @@ atom_expr   : atom  {
                         goto endListElement;
                     }
                     // $$->sListElement.place.insert($$->sListElement.place.begin(),$1->sListElement.place.begin(), $1->sListElement.place.end());
-                    // $$->sListElement.place.push_back($3->iValue);
-
-                    if($1->new_List->type!=MyList)
+                    // $$->sListElement.place.push_back($3->iValue);                
+                    if($1->new_List->type != MyList)//&& $1->new_List->type != String)
                     {
                         yyerror("TypeError: this object is not subscriptable");
                         goto endListElement;
                     }
                     cList* temp3 = $1->new_List->new_List;
+                    int num = Mylen($1->new_List);
+                    if($3->iValue<0)
+                        $3->iValue = $3->iValue+num;
                     for (int i = 0; i < $3->iValue; ++i)
                     {
                         temp3 = temp3->next_element;
                         if(temp3 == NULL)
                         {
                             yyerror("IndexError: list index out of range");
+                            $$->type = Error;
                             goto endListElement;
                         }
                     }
@@ -867,18 +870,25 @@ atom_expr   : atom  {
                         goto endListElement;
                     }
                     cList* temp3 = temp2->new_List;
+                    cList* temp4 = (cList*)safe_malloc(sizeof(cList));
+                    temp4->new_List = temp3;
+                    temp4->type = MyList;
+                    int num = Mylen(temp4);
+                    if($3->iValue<0)
+                        $3->iValue = $3->iValue+num;
                     for (int i = 0; i < $3->iValue; ++i)
                     {
                         temp3 = temp3->next_element;
                         if(temp3 == NULL)
                         {
                             yyerror("IndexError: list index out of range");
+                            $$->type = Error;
                             goto endListElement;
                         }
                     }
                     $$->new_List = temp3; //指针指向取出来的值
                 }
-                else if($1->type == Splite)
+                else if($1->type == MyList)
                 {   //双层链表结构
                     if($3->type != Int)
                     {
@@ -897,7 +907,7 @@ atom_expr   : atom  {
                             goto endListElement;
                         }
                     }
-                    $$->new_List = temp3->new_List;
+                    $$->new_List = temp3;
                 }
                 endListElement:
                     //free($1);
