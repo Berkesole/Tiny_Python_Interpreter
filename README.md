@@ -1,4 +1,4 @@
-# python_Interpreter-19fall-USTC
+# Tiny_Python_Interpreter
 a simple python interpreter implemented by yacc and lex
 ### functions
 - +,-,*,/,%
