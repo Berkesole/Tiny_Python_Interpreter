@@ -922,17 +922,27 @@ atom_expr   : atom  {
                 //     $$->function_name = $3->string_literal;
                 // }
                 $$->function_name = $3;
-            }            | atom_expr  '(' arglist opt_comma ')'
+            }
+            | atom_expr  '(' arglist opt_comma ')'
             {
                 const char* s1 = "append";
                 const char* s2 = "print";
                 const char* s3 = "len";
                 const char* s4 = "list";
+                const char* s5 = "range";
+                const char* s6 = "join";
                 if($1->function_name!=NULL)
                 {
                     if(!strcmp($1->function_name,s1))
                     {
                         $$ = MyAppend($1,$3);
+                    }
+                    else if(!strcmp($1->function_name,s6))
+                    {
+                        $$ = Myjoin($1,$3);
+                    }
+                    else{
+                        yyerror("AttributeError: this object has not this attribute");
                     }
                 }
                 else
@@ -940,12 +950,18 @@ atom_expr   : atom  {
                     if(!strcmp($1->cID,s2))
                     {
                         MyPrint($3);
-                        $$ = $1;
-                        $$->type = Error;
+                        $$ = (stype*)safe_malloc(sizeof(stype));
+                        $$->type = None;
+                        stype* temp = $$;
                     }
                     else if(!strcmp($1->cID,s3))
                     {
                         int len = Mylen($3);
+                        if($3->next_element!= NULL)
+                        {
+                            yyerror("TypeError: len() takes exactly one argument");
+                            return -1;
+                        }
                         if(len == -1)
                         {
                             $$ = $1;
@@ -959,8 +975,95 @@ atom_expr   : atom  {
                         }
                         
                     }
-                }
+                    else if(!strcmp($1->cID,s5))
+                    {
+                        cList* head = (cList*)safe_malloc(sizeof(cList));
+                        head->next_element = NULL;
+                        head->new_List = $3;
+                        //cList* temp_List = $3;
+                        head->type = MyList;
+                        int len = Mylen(head);
+                        $$ = (stype*)safe_malloc(sizeof(stype));
+                        if(len == -1)
+                        {
+                            $$->type = Error;
+                            goto endFunction;
+                        }
+                        vector<int> element_index;
+                        switch(len)
+                        {
+                            case 1:
+                            {
+                                if($3->type!=Int)
+                                {
+                                    yyerror("TypeError: range() integer start argument expected");
+                                    $$->type = Error;
+                                    goto endFunction;
+                                }
+                                element_index = range(0,$3->integer,1);
+                                //temp = CreateList(0,$3->integer);
+                                break;
+                            }
+                            case 2:
+                            {
+                                if($3->type!=Int||$3->next_element->type!=Int)
+                                {
+                                    yyerror("TypeError: range() integer all arguments expected");
+                                    $$->type = Error;
+                                    goto endFunction;
+                                }
+                                element_index = range($3->integer,$3->next_element->integer,1);
+                                break;
+                            }
+                            case 3:
+                            {
+                                if($3->type!=Int||$3->next_element->type!=Int||$3->next_element->next_element->type!=Int)
+                                {
+                                    yyerror("TypeError: range() integer all arguments expected");
+                                    $$->type = Error;
+                                    goto endFunction;
+                                }
+                                element_index = range($3->integer,$3->next_element->integer,$3->next_element->next_element->integer);
+                                break;
+                            }
+                        }
+                        len = element_index.size();
                 
+                        cList* tail = head;
+                        for(int i = 0;i<len;i++)
+                        {
+                            cList* c = (cList*)safe_malloc(sizeof(cList));
+                            c->type = Int;
+                            c->integer = element_index[i];
+                            tail->next_element = c;
+                            tail = c;
+                        }
+                        tail->next_element = NULL;
+                        $$->new_List = head->next_element;
+                        $$->type = MyList;
+                        free(head);
+                    }
+                    else if(!strcmp($1->cID,s4))
+                    {
+                        $$ = (stype*)safe_malloc(sizeof(stype));
+                        $$->type = MyList;
+                        $$->new_List = list($3);
+                        stype* temp = $$;
+                        if($$->new_List==NULL)
+                        {
+                            $$->type = Error;
+                        }
+                    }
+                    else
+                    {
+                        yyerror("the function does not exist");
+                        $$->type = Error;
+                    }
+                }
+            endFunction:
+                ;
+                //free($1);
+                //free_cList($3);
             }
             | atom_expr  '('  ')'
             {
