@@ -916,9 +916,13 @@ atom_expr   : atom  {
             | atom_expr  '.' ID
             {
                 $$ = $1;
+                // if($1->type==Identify)
+                // {
+                //     //$$->type = Function;
+                //     $$->function_name = $3->string_literal;
+                // }
                 $$->function_name = $3;
-            }
-            | atom_expr  '(' arglist opt_comma ')'
+            }            | atom_expr  '(' arglist opt_comma ')'
             {
                 const char* s1 = "append";
                 const char* s2 = "print";
