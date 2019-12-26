@@ -470,6 +470,7 @@ factor  : '+' factor    {
                                 }
                             free($2);
                         }
+
         | atom_expr {
                         if($1->type == List_element)
                         {
@@ -499,7 +500,7 @@ factor  : '+' factor    {
                         endFactor:
                         ;
                     }
-                    ;                                             
+                    ; 
 
 atom    : ID    {
                     stype* temp = (stype*)safe_malloc(sizeof(stype));
@@ -512,6 +513,10 @@ atom    : ID    {
                                 temp->type = String;
                                 temp->string_literal = $1;
                                 $$ = temp;
+                                //$$.type = String;
+                                //cout<<"atom"<<endl;
+                                //$$.string_literal = $1;
+                                //cout<<$$.string_literal<<endl;
                             }
         | List  {
                     $$ = (stype*)safe_malloc(sizeof(stype));
@@ -522,7 +527,6 @@ atom    : ID    {
                         $$ = $1;
                     }
         ;
-
 
 slice_op    :  /*  empty production */
             {
@@ -542,13 +546,13 @@ sub_expr    :  /*  empty production */
             {
                 $$ = $1;
             }
-            ;          
+            ;              
 
 atom_expr   : atom  {
                         $$ = $1;
                     }
             
-| atom_expr  '[' sub_expr  ':' sub_expr  slice_op ']'
+			| atom_expr  '[' sub_expr  ':' sub_expr  slice_op ']'
             {
                 $$ = (stype*)safe_malloc(sizeof(stype));
                 $$->type = MyList;
