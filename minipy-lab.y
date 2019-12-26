@@ -1078,8 +1078,16 @@ atom_expr   : atom  {
             ;
 
 arglist : add_expr
+        {
+            $$ = Stype2Clist($1);
+            $$->reverse = $1;
+        }   
         | arglist ',' add_expr 
-        ;
+        {
+            $1->next_element = Stype2Clist($3);
+            $1->next_element->reverse = $3;
+            $$ = $1;
+        }
         ;      
 
 List  : '[' ']'
