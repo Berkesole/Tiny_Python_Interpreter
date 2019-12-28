@@ -25,4 +25,4 @@ make
 ### functions
 - +,-,*,/,%
 - list
-- append(), len(), print(), exit()
+- append(), len(), print(), exit(), join()
