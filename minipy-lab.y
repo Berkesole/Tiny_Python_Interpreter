@@ -1108,8 +1108,87 @@ add_expr : add_expr '+' mul_expr
 	      |  mul_expr 
         ;
 
-mul_expr :  mul_expr '*' factor
-            |  mul_expr '/' factor
+mul_expr    : mul_expr '*' factor   {
+                                        $$ = (stype*)safe_malloc(sizeof(stype));
+                                        stype* lvalue;
+                                        stype* rvalue;
+                                        if ($1->type == Identify) {
+                                            symbol_item* tmp = Search_Symbol($1->cID);
+                                            if (!tmp) {
+                                                yyerror("Not defined!");
+                                                $$->type = Error;
+                                                goto endMul;
+                                            } else {
+                                                lvalue = tmp->stype_items;
+                                            }
+                                        } else {
+                                            lvalue = $1;
+                                        }
+                                        if ($3->type == Identify) {
+                                            symbol_item* tmp = Search_Symbol($3->cID);
+                                            if (!tmp) {
+                                                yyerror("Not defined!");
+                                                $$->type = Error;
+                                                goto endMul;
+                                            } else {
+                                                rvalue = tmp->stype_items;
+                                            }
+                                        } else {
+                                            rvalue = $3;
+                                        }
+                                        if (!stype_Mul(lvalue, rvalue, $$)) {
+                                            yyerror("Unsupported operation for types");
+                                            $$->type = Error;
+                                        }
+                                    endMul:
+                                        free($1);
+                                        free($3);
+                                    }
+            |  mul_expr '/' factor  {
+                                        $$ = (stype*)safe_malloc(sizeof(stype));
+                                        stype* lvalue;
+                                        stype* rvalue;
+                                        if ($1->type == Identify) {
+                                            symbol_item* tmp = Search_Symbol($1->cID);
+                                            if (!tmp) {
+                                                yyerror("Not defined!");
+                                                $$->type = Error;
+                                                goto endDiv;
+                                            } else {
+                                                lvalue = tmp->stype_items;
+                                            }
+                                        } else {
+                                            lvalue = $1;
+                                        }
+                                        if ($3->type == Identify) {
+                                            symbol_item* tmp = Search_Symbol($3->cID);
+                                            if (!tmp) {
+                                                yyerror("Not defined!");
+                                                $$->type = Error;
+                                                goto endDiv;
+                                            } else {
+                                                rvalue = tmp->stype_items;
+                                            }
+                                        } else {
+                                            rvalue = $3;
+                                        }
+                                        switch (stype_Div(lvalue, rvalue, $$)) {
+                                        case 0:
+                                            yyerror("Unsupported operation for types");
+                                            $$->type = Error;
+                                            break;
+                                        case -1:
+                                            yyerror("Division by zero");
+                                            $$->type = Error;
+                                            break;
+                                        default:
+                                        case 1:
+                                            break;
+                                        }
+                                    endDiv:
+                                        free($1);
+                                        free($3);
+                                    }
             | mul_expr '%' factor   {
                                         $$ = (stype*)safe_malloc(sizeof(stype));
                                         stype* lvalue;
