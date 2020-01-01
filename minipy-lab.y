@@ -1103,7 +1103,42 @@ List_items
       | List_items ',' add_expr 
       ;
 
-add_expr : add_expr '+' mul_expr
+add_expr : add_expr '+' mul_expr{
+                                    $$ = (stype*)safe_malloc(sizeof(stype));
+                                    stype* lvalue;
+                                    stype* rvalue;
+                                    if ($1->type == Identify) {
+                                        symbol_item* tmp = Search_Symbol($1->cID);
+                                        if (!tmp) {
+                                            yyerror("Not defined!");
+                                            $$->type = Error;
+                                            goto endAdd;
+                                        } else {
+                                            lvalue = tmp->stype_items;
+                                        }
+                                    } else {
+                                        lvalue = $1;
+                                    }
+                                    if ($3->type == Identify) {
+                                        symbol_item* tmp = Search_Symbol($3->cID);
+                                        if (!tmp) {
+                                            yyerror("Not defined!");
+                                            $$->type = Error;
+                                            goto endAdd;
+                                        } else {
+                                            rvalue = tmp->stype_items;
+                                        }
+                                    } else {
+                                        rvalue = $3;
+                                    }
+                                    if (!stype_Add(lvalue, rvalue, $$)) {
+                                        yyerror("Unsupported operation for types");
+                                        $$->type = Error;
+                                    }
+                                endAdd:
+                                    free($1);
+                                    free($3);								
+								}
 	      |  add_expr '-' mul_expr
 	      |  mul_expr 
         ;
