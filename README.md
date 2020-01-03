@@ -1,5 +1,6 @@
 # Tiny_Python_Interpreter
 a simple python interpreter implemented by yacc and lex
+![](/Users/ruike/GitRepo/Tiny_Python_Interpreter/assets/example.png)
 ### Running
 Make sure you get all the requestments, if not, do below 
 ```bash
