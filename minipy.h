@@ -47,7 +47,10 @@ typedef struct stype {
         char*   string_literal;
         cList*  new_List;
     };
-    ListElement sListElement;
+    char* function_name;
+    stype* head_stype;
+    //cList* head_clist;
+    vector<int> slice_index;
     char            str;
 } stype;
 
