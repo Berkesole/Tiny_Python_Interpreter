@@ -1132,8 +1132,8 @@ List_items  : add_expr  {
                             $$->next_element = NULL;
                             free($1);
                         }
-      | List_items ',' add_expr 
-      ;
+      		| List_items ',' add_expr 
+      		;
 
 add_expr : add_expr '+' mul_expr{
                                     $$ = (stype*)safe_malloc(sizeof(stype));
