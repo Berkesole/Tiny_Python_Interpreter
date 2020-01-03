@@ -1098,9 +1098,14 @@ List    : '[' ']'   {
                                         } 
         ;
 
-opt_comma : /*  empty production */
-          | ','
-          ;
+opt_comma   :   {
+                    $$ = ' ';
+                }
+                /*  empty production */
+            | ','   {
+                        $$ = ',';
+                    }
+            ;
 
 List_items  
       : add_expr
