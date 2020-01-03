@@ -34,6 +34,7 @@ typedef struct cList {
         char*           string_literal;
         struct cList*   new_List;
     };
+    struct stype* reverse;
     struct cList*       next_element;
 } cList;
 
