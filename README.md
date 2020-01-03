@@ -1,5 +1,6 @@
 # Tiny_Python_Interpreter
-a simple python interpreter implemented by yacc and lex  
+a simple python interpreter implemented by yacc and lex
+
 ![](https://github.com/Berkesole/Tiny_Python_Interpreter/blob/master/assets/example.png)
 ### Running
 Make sure you get all the requestments, if not, do below 
