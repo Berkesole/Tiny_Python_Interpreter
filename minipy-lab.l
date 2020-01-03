@@ -25,12 +25,13 @@ real    {number}"."{number}?|{number}?"."{number}
                     }
 
 {id}                {
-                        char* temp = (char*)malloc(yyleng * sizeof(char));
+                        char* temp = (char*)malloc((yyleng+1) * sizeof(char));
                         if (temp == NULL) {
                             printf("Memory not enough!\n");
                             exit(1);
                         }
                         strncpy(temp, yytext, yyleng);
+                        temp[yyleng] = '\0';
                         yylval.cID = temp;
                         return ID;
                     }
