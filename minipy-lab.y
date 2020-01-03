@@ -1171,8 +1171,43 @@ add_expr : add_expr '+' mul_expr{
                                     free($1);
                                     free($3);								
 								}
-	      |  add_expr '-' mul_expr
-	      |  mul_expr 
+            | add_expr '-' mul_expr {
+                                        $$ = (stype*)safe_malloc(sizeof(stype));
+                                        stype* lvalue;
+                                        stype* rvalue;
+                                        if ($1->type == Identify) {
+                                            symbol_item* tmp = Search_Symbol($1->cID);
+                                            if (!tmp) {
+                                                yyerror("Not defined!");
+                                                $$->type = Error;
+                                                goto endMinus;
+                                            } else {
+                                                lvalue = tmp->stype_items;
+                                            }
+                                        } else {
+                                            lvalue = $1;
+                                        }
+                                        if ($3->type == Identify) {
+                                            symbol_item* tmp = Search_Symbol($3->cID);
+                                            if (!tmp) {
+                                                yyerror("Not defined!");
+                                                $$->type = Error;
+                                                goto endMinus;
+                                            } else {
+                                                rvalue = tmp->stype_items;
+                                            }
+                                        } else {
+                                            rvalue = $3;
+                                        }
+                                        if (!stype_Minus(lvalue, rvalue, $$)) {
+                                            yyerror("Unsupported operation for types");
+                                            $$->type = Error;
+                                        }
+                                    endMinus:
+                                        free($1);
+                                        free($3);
+                                    }
+	      	|  mul_expr 
         ;
 
 mul_expr    : mul_expr '*' factor   {
