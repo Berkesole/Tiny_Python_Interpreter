@@ -549,10 +549,10 @@ sub_expr    :  /*  empty production */
             ;              
 
 atom_expr   : atom  {
-                        $$ = $1;
+                        $$ = $1;                
                     }
             
-			| atom_expr  '[' sub_expr  ':' sub_expr  slice_op ']'
+            | atom_expr  '[' sub_expr  ':' sub_expr  slice_op ']'
             {
                 $$ = (stype*)safe_malloc(sizeof(stype));
                 $$->type = MyList;
@@ -681,6 +681,15 @@ atom_expr   : atom  {
 						$5->iValue = SizeCaculation($1->new_List->new_List->new_List);
 					}                    
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue,SizeCaculation($1->new_List->new_List->new_List));
+
+                    // cout << $3->iValue << "," << $5->iValue << "," << SizeCaculation()<< endl;
+                    // for (int i = 0; i < element_index.size(); ++i)
+                    // {
+                    //     cout << element_index[i] << ",";
+                    // }
+                    // cout <<""<<endl;
+                    // int test;
+                    // cin >> test;
 
                     int step = $6->iValue;
                     cList *temp = $1->new_List->new_List;
