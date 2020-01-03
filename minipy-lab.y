@@ -1090,9 +1090,13 @@ arglist : add_expr
         }
         ;      
 
-List  : '[' ']'
-      | '[' List_items opt_comma ']' 
-      ;
+List    : '[' ']'   {
+                        $$ = NULL;
+                    }
+        | '[' List_items opt_comma ']'  {
+                                            $$ = $2;
+                                        } 
+        ;
 
 opt_comma : /*  empty production */
           | ','
