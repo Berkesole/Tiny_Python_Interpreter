@@ -1107,8 +1107,31 @@ opt_comma   :   {
                     }
             ;
 
-List_items  
-      : add_expr
+List_items  : add_expr  {
+                            //cout<<"List_items"<<endl;
+                            $$ = (cList*)safe_malloc(sizeof(cList)*1);
+                            $$->type = $1->type;
+                            switch($1->type) {
+                            case Int:
+                                $$->integer = $1->iValue;
+                                break;
+                            case Double:
+                                $$->float_number = $1->dValue;
+                                break;
+                            case String:
+                                /*cout<<$1->string_literal<<endl;*/
+                                $$->string_literal = $1->string_literal;
+                                /*cout<<$$->string_literal<<endl;*/
+                                break;
+                            case MyList:
+                                $$->new_List = $1->new_List;
+                                break;
+                            default:
+                                ;
+                            }
+                            $$->next_element = NULL;
+                            free($1);
+                        }
       | List_items ',' add_expr 
       ;
 
