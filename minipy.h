@@ -14,7 +14,10 @@ typedef enum TYPE {
     String,
     MyList,
     List_element,
-    Splite
+    Function,
+    Splite,
+    Error,
+    None
 }TYPE;
 
 typedef struct ListElement
