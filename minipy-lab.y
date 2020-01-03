@@ -1207,7 +1207,9 @@ add_expr : add_expr '+' mul_expr{
                                         free($1);
                                         free($3);
                                     }
-	      	|  mul_expr 
+	      	|  mul_expr {
+	      					$$ = $1;
+	      				}
         ;
 
 mul_expr    : mul_expr '*' factor   {
