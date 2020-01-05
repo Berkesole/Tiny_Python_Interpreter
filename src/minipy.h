@@ -90,4 +90,8 @@ void free_stype(stype* target);
 void free_cList(cList* target);
 void free_symbol_item(symbol_item* target);
 
-cList* analysis_ListElement(stype* src);
+//cList* analysis_ListElement(stype* src);
+cList* Stype2Clist(stype* t);
+stype* MyAppend(stype* src,cList* arglist);
+void MyPrint(cList* arglist);
+int Mylen(cList* arglist);
