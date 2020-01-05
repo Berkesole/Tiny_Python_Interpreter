@@ -78,12 +78,12 @@ void* safe_malloc(int size);
 
 void yyerror (char const *s);
 
-void printList (cList* new_List);
+void printList (cList* new_List,cList* head);
 void printAssignExpr(stype* show);
 
 symbol_item* Search_Symbol(char * cID);
 
-void copy_cList(cList* src, cList* dst);
+void copy_cList(cList* src, cList* &dst);
 void copy_stype(stype* src, stype* dst);
 
 void free_stype(stype* target);
