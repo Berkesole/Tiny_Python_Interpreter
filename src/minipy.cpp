@@ -72,7 +72,7 @@ void printAssignExpr(stype* show)
     }
 }
 
-void printList(cList* new_List)
+void printList(cList* new_List,cList* head)
 {
     cout << '[' ;
     for (cList* temp = new_List; temp; (temp = temp->next_element) ? printf(", ") : 0 ) {
@@ -86,10 +86,14 @@ void printList(cList* new_List)
                 cout << ".0";
             break;
         case String:
-            cout << temp->string_literal;
+            printf("\'%s\'", temp->string_literal);
+            //cout << temp->string_literal;
             break;
         case MyList:
-            printList(temp->new_List);
+            if(temp->new_List == head)
+                cout << "[...]";
+            else
+                printList(temp->new_List,temp->new_List);
             break;
         default:
             ;
