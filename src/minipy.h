@@ -29,7 +29,7 @@ typedef struct ListElement
 typedef struct cList {
     TYPE                type;
     union {
-        int             integer;
+        int           integer;
         double          float_number;
         char*           string_literal;
         struct cList*   new_List;
@@ -56,7 +56,6 @@ typedef struct stype {
 
 typedef struct symbol_item {
     char*               cID;            //标识符
-    struct stype*        slice_TEMP;        //切片
     struct stype*       stype_items;    //stype指针，指向标识符对应的stype类型变量
     struct symbol_item* next_element;   //链表
 } symbol_item;
