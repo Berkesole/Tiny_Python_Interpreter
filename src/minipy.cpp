@@ -5,8 +5,8 @@ extern symbol_item* symbol_table;
 
 void yyerror(char const* s)
 {
-    cout << "error:" ;
-    cout << s << endl ; 
+    //cout << "error:" ;
+    cout << s;// << endl ; 
 }
 
 void printAssignExpr(stype* show)
