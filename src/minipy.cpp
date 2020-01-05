@@ -13,20 +13,20 @@ void printAssignExpr(stype* show)
 {
     switch (show->type) {
     case Int:
-        cout << show->iValue << endl;
+        cout << show->iValue; //<< endl;
         break;
     case Double:
         cout << show->dValue;
         if (fabs(show->dValue - int(show->dValue)) < Epsilon)
-            cout << ".0" << endl;
-        cout << endl;
+            cout << ".0";
+        //cout << endl;
         break;
     case MyList:
-        printList(show->new_List);
-        cout << endl;
+        printList(show->new_List,show->new_List);
+        //cout << endl;
         break;
     case String:
-        printf("\"%s\"\n", show->string_literal);
+        printf("\'%s\'", show->string_literal);
         break;
     case Identify:
         {
@@ -68,6 +68,7 @@ void printAssignExpr(stype* show)
     }
     case Error:
         break;
+    default:;
     }
 }
 
