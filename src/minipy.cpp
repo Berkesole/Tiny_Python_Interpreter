@@ -66,46 +66,6 @@ void printAssignExpr(stype* show)
         printAssignExpr(temp);
         break;
     }
-    // case Splite:
-    //     {
-    //         cList* head = (cList*)safe_malloc(sizeof(cList));
-    //         cList* tail = head;
-    //         cList* temp = show->new_List;
-    //         while(temp!=NULL)
-    //         {
-    //             cList* c = (cList*)safe_malloc(sizeof(cList));
-    //             c->type = temp->new_List->type;
-    //             switch (c->type) {
-    //                 case Int:
-    //                     c->integer = temp->new_List->integer;
-    //                     break;
-    //                 case Double: 
-    //                     c->float_number = temp->new_List->float_number;
-    //                     break;
-    //                 case String:
-    //                     c->string_literal = temp->new_List->string_literal;
-    //                     break;
-    //                 case MyList:
-    //                     c->new_List = temp->new_List->new_List;
-    //                     break;
-    //                 default:
-    //                     ;
-    //                 }
-    //             temp = temp->next_element;
-    //             tail->next_element = c;
-    //             tail = c;
-    //         }
-    //         tail->next_element = NULL;
-    //         printList(head->next_element);
-    //         tail = head->next_element;
-    //         while(tail)
-    //         {
-    //             free(head);
-    //             head = tail;
-    //             tail = head->next_element;
-    //         }
-    //         free(head);
-    //     }
     case Error:
         break;
     }
