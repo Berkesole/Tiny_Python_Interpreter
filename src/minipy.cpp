@@ -799,26 +799,3 @@ cList* Copy_Slice(cList *src)
 //     /*负方向参数转化为正方向相对位置*/                            
 //     int __Start_index =$3->iValue + __size__;
 //     int __End_index = $5->iValue + __size__; 
-
-
-// }
-// cList* analysis_ListElement(stype* src)
-// {
-//                             symbol_item* itemtemp = Search_Symbol(src->sListElement.cID);
-//                             if(itemtemp==NULL)
-//                             {
-//                                 yyerror("Not defined!");
-//                                 return NULL;
-//                             }
-//                             stype* temp = itemtemp->stype_items;
-//                             if(temp->type!=MyList)
-//                             {
-//                                 yyerror("this object is not subscriptable");
-//                                 return NULL;
-//                             }
-//                             cList* temp_List = (cList*)safe_malloc(sizeof(cList));
-//                             cList* temp_List2 = temp_List;
-//                             temp_List->type = MyList;
-//                             temp_List->new_List = temp->new_List;
-//                             for (int i = 0; i < src->sListElement.place.size(); ++i)
-//                             {
