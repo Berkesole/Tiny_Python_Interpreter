@@ -694,21 +694,6 @@ void assign_clist(cList *src, cList *dst)
     }
 }
 
-// void memmove_Slice(stype *src, stype *dst, int offset)
-// {
-//  cList *__shlstart = src->new_List;
-
-
-//  if(offset < 0) //左移
-//  {
-//      offset = abs(offset);
-//  }
-//  else //右移
-//  {
-
-//  }
-// }
-
 void shl_Slice(stype *src, stype *dst,int offset)
 {
     offset = abs(offset);
@@ -782,4 +767,3 @@ cList* Copy_Slice(cList *src)
     }
     return dst; 
 }
-
