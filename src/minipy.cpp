@@ -783,19 +783,3 @@ cList* Copy_Slice(cList *src)
     return dst; 
 }
 
-
-// cList* Slice_Open(cList *temp,)
-// {
-//     cList* temp_start = temp;    //起始的逻辑位置     
-//     cList* temp_end = temp;      //终止的逻辑位置       
-//     int step = 0;                        //步长         
-//     int __size__ = 0;
-    
-//     if($6 != NULL)                       //步长初始化
-//         step = $6->iValue;
-//     else step = 1;
-//     __size__ = SizeCaculation(temp); //统计list大小，用于计算负参数表达的逻辑位置
-
-//     /*负方向参数转化为正方向相对位置*/                            
-//     int __Start_index =$3->iValue + __size__;
-//     int __End_index = $5->iValue + __size__; 
