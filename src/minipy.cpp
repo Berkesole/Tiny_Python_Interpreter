@@ -822,18 +822,3 @@ cList* Copy_Slice(cList *src)
 //                             temp_List->new_List = temp->new_List;
 //                             for (int i = 0; i < src->sListElement.place.size(); ++i)
 //                             {
-//                                 if(temp_List->type!=MyList)
-//                                 {
-//                                     yyerror("this object is not subscriptable");
-//                                     free(temp_List2);
-//                                     return NULL;
-//                                 }
-//                                 temp_List = temp_List->new_List;
-//                                 for (int j = 0; j < src->sListElement.place[i]; ++j)
-//                                 {
-//                                     temp_List = temp_List->next_element;
-//                                 }
-//                             }
-//                             free(temp_List2);
-//                             return temp_List;
-// }
