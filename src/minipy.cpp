@@ -335,22 +335,6 @@ void copy_stype(stype* src, stype* dst)
     //         {
     //             case Int:
     //             {
-    //                 c->type = Int;
-    //                 c->integer = temp->integer;
-    //                 break;
-    //             }
-    //             case Double:
-    //             {
-    //                 c->type = Double;
-    //                 c->float_number = temp->float_number;
-    //                 break;
-    //             }
-    //             case MyList:
-    //             {
-    //                 c->type = MyList;
-    //                 c->new_List = temp->new_List;
-    //                 break;
-    //             }
 
     else if(src->type == String)
     {
