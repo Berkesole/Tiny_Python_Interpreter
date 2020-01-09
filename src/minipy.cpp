@@ -351,22 +351,7 @@ void copy_stype(stype* src, stype* dst)
     //                 c->new_List = temp->new_List;
     //                 break;
     //             }
-    //             case string_literal:
-    //             {
-    //                 c->type = String;
-    //                 c->string_literal = (char*)safe_malloc(sizeof(temp->string_literal));
-    //                 strncpy(c->string_literal, temp->string_literal, strlen(temp->string_literal));
-    //                 break;
-    //             }
-    //         }
-    //         temp1 = temp1->next_element;
-    //         tail->next_element = c;
-    //         tail = c;
-    //     }
-    //     tail->next_element = NULL;
-    //     dst->new_List = head->next_element;
-    //     free(head);
-    // }
+
     else if(src->type == String)
     {
         dst->type = String;
