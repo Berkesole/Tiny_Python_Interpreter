@@ -321,11 +321,6 @@ void copy_stype(stype* src, stype* dst)
             }
         }
     }
-    // else if(src->type == Splite)
-    // {
-    //     dst->type = MyList;
-    //     cList* head = (cList*)safe_malloc(sizeof(cList));
-
 
     else if(src->type == String)
     {
