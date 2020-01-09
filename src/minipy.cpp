@@ -377,10 +377,6 @@ void copy_stype(stype* src, stype* dst)
     {
         *dst = *src;
     }
-    // if (dst->type == MyList) {
-    //     dst->new_List = (cList*)safe_malloc(sizeof(cList));
-    //     copy_cList(src->new_List, dst->new_List);
-    // }
 }
 
 void copy_cList(cList* src, cList* dst)
