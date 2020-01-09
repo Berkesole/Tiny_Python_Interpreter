@@ -329,12 +329,6 @@ void copy_stype(stype* src, stype* dst)
     //     cList* temp1 = src->new_List;
     //     while(temp1)
     //     {
-    //         cList* temp = temp1->new_List;
-    //         cList* c = (cList*)safe_malloc(sizeof(cList));
-    //         switch(temp->type)
-    //         {
-    //             case Int:
-    //             {
 
     else if(src->type == String)
     {
