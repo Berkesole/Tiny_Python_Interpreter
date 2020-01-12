@@ -645,6 +645,42 @@ void assign_clist(cList *src, cList *dst)
     }
 }
 
+// void shl_Slice(stype *src, stype *dst,int offset)
+// {
+//     offset = abs(offset);
+//     cList *__shlstart = src->new_List;
+//     int size = dst->slice_index.size();
+//     for(int i = 0; i < dst->slice_index[0] - 1; i++)
+//     {
+//         __shlstart = __shlstart -> next_element;//记录切片的第一个结点
+//     }
+//     cList *temp_start = __shlstart;
+//     cList *temp_end = __shlstart;
+//     int flag = 0;
+//     for (int i = 0; i < size - offset; i++)
+//     {
+//         if(flag == 0)
+//         {
+//             flag = 1;
+//         }
+//         else temp_start = temp_start->next_element; //记录左移后删除的list的第一个结点
+//     }
+//     for (int i = 0; i < size + 1 && temp_end != NULL; i++)
+//     {
+//         temp_end = temp_end->next_element;
+//     }
+//     if(temp_end != NULL) 
+//     {
+//         assign_clist(temp_end,temp_start->next_element);
+//         temp_start->next_element->next_element = temp_end->next_element;
+//     }
+//     else 
+//     {
+//         if (dst->slice_index[0] == 0 && flag != 1) src->new_List = NULL;
+//         else temp_start->next_element = NULL;
+//     }
+// }
+
 void shl_Slice(stype *src, stype *dst,int offset)
 {
     offset = abs(offset);
