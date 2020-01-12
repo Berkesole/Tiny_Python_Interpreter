@@ -613,7 +613,7 @@ cList* list(cList* arglist)
     }
 }
 
-void assign_clist(cList *src, cList *dst)
+void assign_clist(cList *src, cList *&dst)
 {
     switch(src->type)
     {
