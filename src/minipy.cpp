@@ -334,8 +334,13 @@ void copy_stype(stype* src, stype* dst)
     }
 }
 
-void copy_cList(cList* src, cList* dst)
+void copy_cList(cList* src, cList*& dst)
 {
+    if(src == NULL)
+    {
+        dst = NULL;
+        return;
+    }
     *dst = *src;
     if (dst->type == MyList) {
         dst->new_List = (cList*)safe_malloc(sizeof(cList));
@@ -346,6 +351,8 @@ void copy_cList(cList* src, cList* dst)
         dst->string_literal = (char*)safe_malloc(sizeof(src->string_literal));
         strncpy(dst->string_literal, src->string_literal, strlen(src->string_literal));
     }
+    dst->next_element = (cList*)safe_malloc(sizeof(cList));
+    copy_cList(src->next_element,dst->next_element);
 }
 
 void free_stype(stype* target)
