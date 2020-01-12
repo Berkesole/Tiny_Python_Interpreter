@@ -6,7 +6,7 @@ extern symbol_item* symbol_table;
 void yyerror(char const* s)
 {
     //cout << "error:" ;
-    cout << s;// << endl ; 
+    cout << s; //<< endl ; 
 }
 
 void printAssignExpr(stype* show)
@@ -484,6 +484,10 @@ void copy_stype(stype* src, stype* dst)
             }
         }
     }
+    // if (dst->type == MyList) {
+    //     dst->new_List = (cList*)safe_malloc(sizeof(cList));
+    //     copy_cList(src->new_List, dst->new_List);
+    // }
 }
 
 void copy_cList(cList* src, cList*& dst)
@@ -848,6 +852,21 @@ void assign_clist(cList *src, cList *&dst)
         }
     }
 }
+
+// void memmove_Slice(stype *src, stype *dst, int offset)
+// {
+//  cList *__shlstart = src->new_List;
+
+
+//  if(offset < 0) //左移
+//  {
+//      offset = abs(offset);
+//  }
+//  else //右移
+//  {
+
+//  }
+// }
 
 // void shl_Slice(stype *src, stype *dst,int offset)
 // {
