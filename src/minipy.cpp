@@ -463,12 +463,20 @@ stype* MyAppend(stype* src,cList* arglist)
 
 void MyPrint(cList* arglist)
 {
-    if(arglist->next_element!=NULL)
+    if(arglist->next_element==NULL)
     {
-        yyerror("TypeError: print() takes exactly one argument");
+        printAssignExpr(arglist->reverse);
         return;
     }
-    printAssignExpr(arglist->reverse);
+    cout<<'(';
+    while(arglist)
+    {
+        printAssignExpr(arglist->reverse);
+        if(arglist->next_element !=NULL)
+            cout<<',';
+        arglist = arglist->next_element;
+    }
+    cout<<')';//<<endl;
     return;
 
 }
