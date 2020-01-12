@@ -542,21 +542,29 @@ vector<int> range(int a,int b,int c)
 
 vector<int> MySplite(int a,int b,int c,int len)
 {
+    if(a < -len) a = 0;
+    else if (a > len - 1) a = len;
+    if(b < -len) b = 0;
+    else if (b > len - 1) b = len; 
     vector<int> element_index;
-    if(a<0)
-        a+= len;
-    if(b<0)
-        b+= len;
-    if(c==0)
+    if(a < 0)
+    {
+        a += len;
+    }
+    if(b < 0)
+    {
+        b += len;
+    }
+    if(c == 0)
     {
         return element_index;
     }
-    else if(c>0)
+    else if(c > 0)
     {
 
-        if(a>=b)
+        if(a >= b)
             return element_index;
-        while(a<b)
+        while(a < b)
         {
             element_index.push_back(a);
             a += c;
@@ -565,9 +573,9 @@ vector<int> MySplite(int a,int b,int c,int len)
     }
     else
     {
-        if(a<=b)
+        if(a <= b)
             return element_index;
-        while(a>b)
+        while(a > b)
         {
             element_index.push_back(a);
             a += c;
