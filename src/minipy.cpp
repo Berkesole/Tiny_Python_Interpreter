@@ -605,7 +605,11 @@ cList* list(cList* arglist)
         return tail;
     }
     else if(arglist->type == MyList)//||arglist->type == Splite)
-        return arglist->new_List;
+    {
+        cList* src = (cList*)safe_malloc(sizeof(cList));
+        copy_cList(arglist->new_List,src);
+        return src;//arglist->new_List;
+    }
     else
     {
         yyerror("TypeError: this object is not iterable");
