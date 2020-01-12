@@ -11,11 +11,11 @@ We leads the language of the translation the analysis the method to produce the 
 
 ## Directory Structure
 - `src` : All the important code of Python_Interpreter
- - `.y` : productions/rewriting mle and syntax-directed file
- - `.l` : code of lexical analysis and identify specific text strings to generate TOKEN
- - `.cpp` : functions implemented by c++
- - `.h` : the head file
- - `Makefile` : make all files
+	- `.y` : productions/rewriting mle and syntax-directed file
+ 	- `.l` : code of lexical analysis and identify specific text strings to generate TOKEN
+ 	- `.cpp` : functions implemented by c++
+ 	- `.h` : the head file
+ 	- `Makefile` : make all files
 - `assets` : some pictures and others
 
 ## Running
