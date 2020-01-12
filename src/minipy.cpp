@@ -665,8 +665,38 @@ void shl_Slice(stype *src, stype *dst,int offset)
     {
         temp_end = temp_end->next_element;
     }
-    if() assign_clist(temp_end,temp_start);
-    temp_start->next_element = temp_end->next_element;
+    
+    if(temp_end != NULL) 
+    {
+        assign_clist(temp_end,temp_start);
+        temp_start->next_element = temp_end->next_element;        
+    }
+    else
+    {
+        if(temp_start == __shlstart)
+        {
+            if(__shlstart == src->new_List)
+                src->new_List = NULL;
+            else
+            {
+                __shlstart = src->new_List;
+                for(int i = 0; i < dst->slice_index[0]-1; i++)
+                {
+                    __shlstart = __shlstart -> next_element;//记录切片的第一个结点
+                }
+                __shlstart->next_element = NULL;
+            }
+        }
+        else   
+        {
+            temp_start = __shlstart;
+            for (int i = 0; i < size - offset-1; i++)
+            {
+                temp_start = temp_start->next_element; //记录左移后删除的最后一个结点
+            }
+            temp_start->next_element = NULL;
+        }
+    }
 }
 
 void shr_Slice(stype *src, stype *dst,int offset)
