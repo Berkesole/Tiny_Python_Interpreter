@@ -435,6 +435,11 @@ stype* MyAppend(stype* src,cList* arglist)
             return src;
         }
         cList* temp = t->new_List;
+        if(temp==NULL)
+        {
+            t->new_List = arglist;
+            return src;
+        }
         while(temp->next_element)
         {
             temp = temp->next_element;
@@ -452,6 +457,26 @@ stype* MyAppend(stype* src,cList* arglist)
             return src;
         }
         temp = temp->new_List;
+        if(temp==NULL)
+        {
+            src->new_List->new_List = arglist;
+            return src;
+        }
+        while(temp->next_element)
+        {
+            temp = temp->next_element;
+        }
+        temp->next_element = arglist;
+        return src;
+    }
+    else if(src->type == MyList)
+    {
+        cList* temp = src->new_List;
+        if(temp==NULL)
+        {
+            src->new_List = arglist;
+            return src;
+        }
         while(temp->next_element)
         {
             temp = temp->next_element;
