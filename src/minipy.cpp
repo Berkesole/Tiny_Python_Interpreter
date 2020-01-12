@@ -18,11 +18,9 @@ void printAssignExpr(stype* show)
         cout << show->dValue;
         if (fabs(show->dValue - int(show->dValue)) < Epsilon)
             cout << ".0";
-        //cout << endl;
         break;
     case MyList:
         printList(show->new_List,show->new_List);
-        //cout << endl;
         break;
     case String:
         printf("\'%s\'", show->string_literal);
@@ -86,7 +84,6 @@ void printList(cList* new_List,cList* head)
             break;
         case String:
             printf("\'%s\'", temp->string_literal);
-            //cout << temp->string_literal;
             break;
         case MyList:
             if(temp->new_List == head)
