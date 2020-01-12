@@ -719,6 +719,21 @@ cList* Copy_Slice(cList *src)
     return dst; 
 }
 
+void MyQuit(symbol_item* symbol_table)
+{
+    //free 所有的符号
+    symbol_item* temp = symbol_table;
+    symbol_item* temp1 = temp->next_element;
+    while(temp1)
+    {
+        free_symbol_item(temp);
+        temp = temp1;
+        temp1 = temp->next_element;
+    }
+    free_symbol_item(temp);
+    return;
+}
+
 stype* Myjoin(stype* Delimiter,cList* src)
 {
     if(src->type!=MyList)
