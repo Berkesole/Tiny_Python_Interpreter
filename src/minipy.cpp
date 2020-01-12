@@ -719,6 +719,39 @@ cList* Copy_Slice(cList *src)
     return dst; 
 }
 
+stype* Myjoin(stype* Delimiter,cList* src)
+{
+    if(src->type!=MyList)
+    {
+        yyerror("TypeError: can only join an iterable");
+        return NULL;
+    }
+    stype* result = (stype*)safe_malloc(sizeof(stype));
+    result->type = String;
+    cList* string_list = src->new_List;
+    if(string_list->type!=String)
+    {
+        yyerror("TypeError:expected str instance");
+        return NULL;
+    }
+    char* result_string = (char*)safe_malloc(sizeof(string_list->string_literal));
+    strncpy(result_string, string_list->string_literal, strlen(string_list->string_literal));
+    char* s = Delimiter->string_literal;
+    while(string_list->next_element)
+    {
+        string_list = string_list->next_element;
+        if(string_list->type!=String)
+        {
+            yyerror("TypeError:expected str instance");
+            return NULL;
+        }
+        result_string = join3(result_string,s);
+        result_string = join3(result_string,string_list->string_literal);
+    }
+    result->string_literal = result_string;
+    return result;
+}
+
 char* join3(char *s1, char *s2)
 {
     char *result = (char*)malloc(strlen(s1)+strlen(s2)+1);//+1 for the zero-terminator
