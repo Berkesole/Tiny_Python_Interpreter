@@ -475,16 +475,11 @@ void MyPrint(cList* arglist)
 
 int Mylen(cList* arglist)
 {
-    if(arglist->next_element!= NULL)
-    {
-        yyerror("TypeError: len() takes exactly one argument");
-        return -1;
-    }
-    if(arglist->type == List_element)
-    {
-        arglist = arglist->new_List;
-    }
-    if(arglist->type!=MyList&&arglist->type!=Splite)
+    // if(arglist->type == List_element)
+    // {
+    //     arglist = arglist->new_List;
+    // }
+    if(arglist->type!=MyList)//&&arglist->type!=Splite)
     {
         yyerror("TypeError: this object has no len()");
         return -1;
