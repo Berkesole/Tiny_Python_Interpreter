@@ -143,7 +143,31 @@ int stype_Add(stype* lval, stype* rval, stype* result)
             ));
         strcpy(result->string_literal, lval->string_literal);
         strcat(result->string_literal, rval->string_literal);
-    } else {
+    }
+    else if(ltype == MyList && rtype == MyList)
+    {
+        cList* lcopy = (cList*)safe_malloc(sizeof(cList));
+        result->type = MyList;
+        copy_cList(lval->new_List,lcopy);
+        cList* rcopy = (cList*)safe_malloc(sizeof(cList));
+        copy_cList(rval->new_List,rcopy);
+        cList* temp = lcopy;
+        if(temp == NULL)
+        {
+            result->new_List = rcopy;
+            return 1;
+        }
+        if(rcopy == NULL)
+        {
+            result->new_List = lcopy;
+            return 1;
+        }
+        while(temp->next_element)
+            temp = temp->next_element;
+        temp->next_element = rcopy;
+        result->new_List = lcopy;
+    }
+    else {
         return 0;
     }
     return 1;
@@ -201,7 +225,69 @@ int stype_Mul(stype* lval, stype* rval, stype* result)
                 result->dValue *= rval->dValue;
             }
         }
-    } else {
+    } 
+    else if(ltype == MyList && rtype == Int||(ltype == Int && rtype == MyList))
+    {
+        if(ltype == MyList)
+        {
+            result->type = MyList;
+            cList* lcopy = (cList*)safe_malloc(sizeof(cList));
+            copy_cList(lval->new_List,lcopy);
+            int num = rval->iValue;
+            if(num<=0)
+            {
+                result->new_List = NULL;
+                return 1;
+            }
+            result->new_List = lcopy;
+            num--;
+            cList* temp = result->new_List;
+            if(temp == NULL)
+            {
+                result->new_List = NULL;
+                return 1;
+            }
+            while(num--)
+            {
+                cList* temp2 = (cList*)safe_malloc(sizeof(cList));
+                copy_cList(lval->new_List,temp2);
+                temp = result->new_List;
+                while(temp->next_element)
+                    temp = temp->next_element;
+                temp->next_element = temp2;
+            }
+        }
+        else if(rtype == MyList)
+        {
+            result->type = MyList;
+            cList* rcopy = (cList*)safe_malloc(sizeof(cList));
+            copy_cList(rval->new_List,rcopy);
+            int num = lval->iValue;
+            if(num<=0)
+            {
+                result->new_List = NULL;
+                return 1;
+            }
+            result->new_List = rcopy;
+            num--;
+            cList* temp = result->new_List;
+            if(temp == NULL)
+            {
+                result->new_List = NULL;
+                return 1;
+            }
+            while(num--)
+            {
+                cList* temp2 = (cList*)safe_malloc(sizeof(cList));
+                copy_cList(rval->new_List,temp2);
+                temp = result->new_List;
+                while(temp->next_element)
+                    temp = temp->next_element;
+                temp->next_element = temp2;
+            }
+        }
+    }
+    else {
         return 0;
     }
     return 1;
