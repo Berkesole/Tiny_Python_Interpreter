@@ -406,6 +406,11 @@ cList* Stype2Clist(stype* t)
                 case Identify:
                 {
                     symbol_item* temp = Search_Symbol(t->cID);
+                    if(temp == NULL)
+                    {
+                        yyerror("It is not defined");
+                        return NULL;
+                    }
                     stype* temp1 = temp->stype_items;
                     free(list);
                     list = Stype2Clist(temp1);
