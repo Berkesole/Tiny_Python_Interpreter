@@ -1,13 +1,24 @@
 # Tiny_Python_Interpreter
 A simple python interpreter implemented by yacc and lex and it is capable of interpreting python-like languages simply.  
 
+We leads the language of the translation the analysis the method to produce the language rule.
+
 ![](https://github.com/Berkesole/Tiny_Python_Interpreter/blob/master/assets/example.png)
 
-### Authors
+## Authors
 [Ke Rui](https://github.com/Berkesole)   
 [Jiawei Wang](https://github.com/JarvisUSTC)
 
-### Running
+## Directory Structure
+- `src` : All the important code of Python_Interpreter
+ - `.y` : productions/rewriting mle and syntax-directed file
+ - `.l` : code of lexical analysis and identify specific text strings to generate TOKEN
+ - `.cpp` : functions implemented by c++
+ - `.h` : the head file
+ - `Makefile` : make all files
+- `assets` : some pictures and others
+
+## Running
 Make sure you get all the requestments, if not, do below 
 ```bash
 sudo apt-get install flex bison
@@ -27,7 +38,7 @@ c++ -g -o analysis y.tab.c minipy.cpp
 /* Anyway, you can also use `make` to make all the files */
 make
 ```
-### functions
+## Functions
 - +,-,*,/,%
 - list
 - append(), len(), print(), exit(), join()
