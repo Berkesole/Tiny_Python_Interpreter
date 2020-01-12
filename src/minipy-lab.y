@@ -546,8 +546,8 @@ sub_expr    :  /*  empty production */
             {
                 $$ = $1;
             }
-            ;              
-
+            ;     
+   
 atom_expr   : atom  {
                         $$ = $1;                
                     }
@@ -585,22 +585,22 @@ atom_expr   : atom  {
 
                     if($6 == NULL) 
                     {
-                    	$6 = (stype*)safe_malloc(sizeof(stype));
-                    	$6->type = Int;
-                    	$6->iValue = 1;
+                        $6 = (stype*)safe_malloc(sizeof(stype));
+                        $6->type = Int;
+                        $6->iValue = 1;
                     }
                     if($3 == NULL)
                     {
-                    	$3 = (stype*)safe_malloc(sizeof(stype));
-                    	$3->type = Int;
-                    	$3->iValue = 0;
-                    }                    	
+                        $3 = (stype*)safe_malloc(sizeof(stype));
+                        $3->type = Int;
+                        $3->iValue = 0;
+                    }                       
                     if($5 == NULL) 
                     {
-                    	$5 = (stype*)safe_malloc(sizeof(stype));
-                    	$5->type = Int;
-						$5->iValue = SizeCaculation(__item->new_List);
-					}
+                        $5 = (stype*)safe_malloc(sizeof(stype));
+                        $5->type = Int;
+                        $5->iValue = SizeCaculation(__item->new_List);
+                    }
 
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue,SizeCaculation(__item->new_List));
 
@@ -617,9 +617,9 @@ atom_expr   : atom  {
                     else
                     {
                         int flag = 0;// a trick
-                        for (int i = 0; i < element_index.size(); i++)                        	
+                        for (int i = 0; i < element_index.size(); i++)                          
                         {   
-                        	temp = __item->new_List;
+                            temp = __item->new_List;
                             for (int j = 0; j < element_index[i]; j++)
                             {
                                 temp = temp->next_element;
@@ -627,13 +627,13 @@ atom_expr   : atom  {
                             temp1 = Copy_Slice(temp);
                             if (flag == 1)
                             {
-	                            temp2->next_element = temp1;
-	                            temp2 = temp2->next_element;
+                                temp2->next_element = temp1;
+                                temp2 = temp2->next_element;
                             }
                             else 
                             {
                                 temp2 = temp1;
-                            	temp3 = temp2;                                
+                                temp3 = temp2;                                
                                 flag = 1;
                             }                                                                            
                         }
@@ -643,10 +643,10 @@ atom_expr   : atom  {
                     if (step == 1) $$->head_stype = $1;
                     $$->slice_index.assign(element_index.begin(),element_index.end());
                     if($3->iValue == $5->iValue) 
-                    	{
-                    		$$->slice_index.push_back($3->iValue);
-                			$$->slice_index.push_back(0);
-                		}
+                        {
+                            $$->slice_index.push_back($3->iValue);
+                            $$->slice_index.push_back(0);
+                        }
 
                 }                
                 else if($1->type == List_element)
@@ -664,23 +664,32 @@ atom_expr   : atom  {
                     }
                     if($6 == NULL) 
                     {
-                    	$6 = (stype*)safe_malloc(sizeof(stype));
-                    	$6->type = Int;
-                    	$6->iValue = 1;
+                        $6 = (stype*)safe_malloc(sizeof(stype));
+                        $6->type = Int;
+                        $6->iValue = 1;
                     }
                     if($3 == NULL)
                     {
-                    	$3 = (stype*)safe_malloc(sizeof(stype));
-                    	$3->type = Int;
-                    	$3->iValue = 0;
-                    }                    	
+                        $3 = (stype*)safe_malloc(sizeof(stype));
+                        $3->type = Int;
+                        $3->iValue = 0;
+                    }                       
                     if($5 == NULL) 
                     {
-                    	$5 = (stype*)safe_malloc(sizeof(stype));
-                    	$5->type = Int;
-						$5->iValue = SizeCaculation($1->new_List->new_List->new_List);
-					}                    
+                        $5 = (stype*)safe_malloc(sizeof(stype));
+                        $5->type = Int;
+                        $5->iValue = SizeCaculation($1->new_List->new_List->new_List);
+                    }                    
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue,SizeCaculation($1->new_List->new_List->new_List));
+
+                    // cout << $3->iValue << "," << $5->iValue << "," << SizeCaculation()<< endl;
+                    // for (int i = 0; i < element_index.size(); ++i)
+                    // {
+                    //     cout << element_index[i] << ",";
+                    // }
+                    // cout <<""<<endl;
+                    // int test;
+                    // cin >> test;
 
                     int step = $6->iValue;
                     cList *temp = $1->new_List->new_List;
@@ -698,7 +707,7 @@ atom_expr   : atom  {
                         int flag = 0;// a trick
                         for (int i = 0; i < element_index.size(); i++)
                         {   
-                        	temp = $1->new_List->new_List;
+                            temp = $1->new_List->new_List;
                             for (int j = 0; j < element_index[i]; j++)
                             {
                                 temp = temp->next_element;
@@ -706,8 +715,8 @@ atom_expr   : atom  {
                             temp1 = Copy_Slice(temp);
                             if (flag == 1)
                             {
-	                            temp2->next_element = temp1;
-	                            temp2 = temp2->next_element;
+                                temp2->next_element = temp1;
+                                temp2 = temp2->next_element;
                             }
                             else 
                             {
@@ -722,15 +731,15 @@ atom_expr   : atom  {
                     else $$->new_List = NULL;
                     if (step == 1) 
                     {
-                		$$->head_stype = $1;
-                		$$->head_stype->new_List = $$->head_stype->new_List->new_List;
+                        $$->head_stype = $1;
+                        $$->head_stype->new_List = $$->head_stype->new_List->new_List;
                     }
                     $$->slice_index.assign(element_index.begin(),element_index.end());                  
                     if($3->iValue == $5->iValue) 
-                    	{
-                    		$$->slice_index.push_back($3->iValue);
-                			$$->slice_index.push_back(0);
-                		}
+                        {
+                            $$->slice_index.push_back($3->iValue);
+                            $$->slice_index.push_back(0);
+                        }
                 }
                 else if($1->type == MyList)
                 {    
@@ -742,22 +751,22 @@ atom_expr   : atom  {
 
                     if($6 == NULL) 
                     {
-                    	$6 = (stype*)safe_malloc(sizeof(stype));
-                    	$6->type = Int;
-                    	$6->iValue = 1;
+                        $6 = (stype*)safe_malloc(sizeof(stype));
+                        $6->type = Int;
+                        $6->iValue = 1;
                     }
                     if($3 == NULL)
                     {
-                    	$3 = (stype*)safe_malloc(sizeof(stype));
-                    	$3->type = Int;
-                    	$3->iValue = 0;
-                    }                    	
+                        $3 = (stype*)safe_malloc(sizeof(stype));
+                        $3->type = Int;
+                        $3->iValue = 0;
+                    }                       
                     if($5 == NULL) 
                     {
-                    	$5 = (stype*)safe_malloc(sizeof(stype));
-                    	$5->type = Int;
-						$5->iValue = SizeCaculation($1->new_List);
-					}
+                        $5 = (stype*)safe_malloc(sizeof(stype));
+                        $5->type = Int;
+                        $5->iValue = SizeCaculation($1->new_List);
+                    }
                     vector<int> element_index = MySplite($3->iValue, $5->iValue ,$6->iValue ,SizeCaculation($1->new_List));
 
                     int step = $6->iValue;
@@ -775,7 +784,7 @@ atom_expr   : atom  {
                         int flag = 0;// a trick
                         for (int i = 0; i < element_index.size(); i++)
                         {   
-                        	temp = $1->new_List;
+                            temp = $1->new_List;
                             for (int j = 0; j < element_index[i]; j++)
                             {
                                 temp = temp->next_element;
@@ -783,8 +792,8 @@ atom_expr   : atom  {
                             temp1 = Copy_Slice(temp);
                             if (flag == 1)
                             {
-	                            temp2->next_element = temp1;
-	                            temp2 = temp2->next_element;
+                                temp2->next_element = temp1;
+                                temp2 = temp2->next_element;
                             }
                             else 
                             {
@@ -800,10 +809,10 @@ atom_expr   : atom  {
                     if(step == 1) $$->head_stype = $1;
                     $$->slice_index.assign(element_index.begin(),element_index.end());
                     if($3->iValue == $5->iValue) 
-                    	{
-                    		$$->slice_index.push_back($3->iValue);
-                			$$->slice_index.push_back(0);
-                		}
+                        {
+                            $$->slice_index.push_back($3->iValue);
+                            $$->slice_index.push_back(0);
+                        }
                 }               
                 endListElement1:
                     //free($1);
@@ -1071,9 +1080,19 @@ atom_expr   : atom  {
             }
             | atom_expr  '('  ')'
             {
-                const char* s5 = "quit";
-                if(!strcmp($1->cID,s5))
+                const char* s7 = "quit";
+                if(!strcmp($1->cID,s7))
+                {
+                    //clear the symbol_table
+                    MyQuit(symbol_table);
                     return 0;
+                }
+                else
+                {
+                    yyerror("the function does not exist");
+                    $$ = $1;
+                    $$->type = Error;
+                }
             }
             ;
 
@@ -1088,7 +1107,7 @@ arglist : add_expr
             $1->next_element->reverse = $3;
             $$ = $1;
         }
-        ;      
+        ;
 
 List    : '[' ']'   {
                         $$ = NULL;
@@ -1106,7 +1125,7 @@ opt_comma   :   {
                         $$ = ',';
                     }
             ;
-
+            
 List_items  : add_expr  {
                             //cout<<"List_items"<<endl;
                             $$ = (cList*)safe_malloc(sizeof(cList)*1);
@@ -1132,45 +1151,72 @@ List_items  : add_expr  {
                             $$->next_element = NULL;
                             free($1);
                         }
-      		| List_items ',' add_expr 
-      		;
+            | List_items ',' add_expr   {
+                                            $$ = $1;
+                                            cList* new_List = (cList*)safe_malloc(sizeof(cList)*1);
+                                            new_List->type = $3->type;
+                                            switch($3->type) {
+                                            case Int:
+                                                new_List->integer = $3->iValue;
+                                                break;
+                                            case Double:
+                                                new_List->float_number = $3->dValue;
+                                                break;
+                                            case String:
+                                                new_List->string_literal = $3->string_literal;
+                                                break;
+                                            case MyList:
+                                                new_List->new_List = $3->new_List;
+                                                break;
+                                            default:
+                                                ;
+                                            } 
+                                            new_List->next_element = NULL;
+                                            cList* temp = $$;
+                                            while(temp->next_element) {
+                                                temp = temp->next_element;
+                                            }
+                                            temp->next_element = new_List;
+                                            free($3);
+                                        }
+            ;
 
-add_expr : add_expr '+' mul_expr{
-                                    $$ = (stype*)safe_malloc(sizeof(stype));
-                                    stype* lvalue;
-                                    stype* rvalue;
-                                    if ($1->type == Identify) {
-                                        symbol_item* tmp = Search_Symbol($1->cID);
-                                        if (!tmp) {
-                                            yyerror("Not defined!");
-                                            $$->type = Error;
-                                            goto endAdd;
-                                        } else {
-                                            lvalue = tmp->stype_items;
+add_expr    : add_expr '+' mul_expr    {
+                                            $$ = (stype*)safe_malloc(sizeof(stype));
+                                            stype* lvalue;
+                                            stype* rvalue;
+                                            if ($1->type == Identify) {
+                                                symbol_item* tmp = Search_Symbol($1->cID);
+                                                if (!tmp) {
+                                                    yyerror("Not defined!");
+                                                    $$->type = Error;
+                                                    goto endAdd;
+                                                } else {
+                                                    lvalue = tmp->stype_items;
+                                                }
+                                            } else {
+                                                lvalue = $1;
+                                            }
+                                            if ($3->type == Identify) {
+                                                symbol_item* tmp = Search_Symbol($3->cID);
+                                                if (!tmp) {
+                                                    yyerror("Not defined!");
+                                                    $$->type = Error;
+                                                    goto endAdd;
+                                                } else {
+                                                    rvalue = tmp->stype_items;
+                                                }
+                                            } else {
+                                                rvalue = $3;
+                                            }
+                                            if (!stype_Add(lvalue, rvalue, $$)) {
+                                                yyerror("Unsupported operation for types");
+                                                $$->type = Error;
+                                            }
+                                        endAdd:
+                                            free($1);
+                                            free($3);
                                         }
-                                    } else {
-                                        lvalue = $1;
-                                    }
-                                    if ($3->type == Identify) {
-                                        symbol_item* tmp = Search_Symbol($3->cID);
-                                        if (!tmp) {
-                                            yyerror("Not defined!");
-                                            $$->type = Error;
-                                            goto endAdd;
-                                        } else {
-                                            rvalue = tmp->stype_items;
-                                        }
-                                    } else {
-                                        rvalue = $3;
-                                    }
-                                    if (!stype_Add(lvalue, rvalue, $$)) {
-                                        yyerror("Unsupported operation for types");
-                                        $$->type = Error;
-                                    }
-                                endAdd:
-                                    free($1);
-                                    free($3);								
-								}
             | add_expr '-' mul_expr {
                                         $$ = (stype*)safe_malloc(sizeof(stype));
                                         stype* lvalue;
@@ -1207,10 +1253,10 @@ add_expr : add_expr '+' mul_expr{
                                         free($1);
                                         free($3);
                                     }
-	      	|  mul_expr {
-	      					$$ = $1;
-	      				}
-        ;
+            |  mul_expr {
+                            $$ = $1;
+                        }
+            ;
 
 mul_expr    : mul_expr '*' factor   {
                                         $$ = (stype*)safe_malloc(sizeof(stype));
@@ -1345,11 +1391,10 @@ mul_expr    : mul_expr '*' factor   {
 
 %%
 
-
 int yywrap()
-{ 
-  return 1; 
-}        		    
+{
+    return 1;
+}
 
 int main()
 {
