@@ -321,7 +321,52 @@ void copy_stype(stype* src, stype* dst)
             }
         }
     }
-
+    // else if(src->type == Splite)
+    // {
+    //     dst->type = MyList;
+    //     cList* head = (cList*)safe_malloc(sizeof(cList));
+    //     cList* tail = head;
+    //     cList* temp1 = src->new_List;
+    //     while(temp1)
+    //     {
+    //         cList* temp = temp1->new_List;
+    //         cList* c = (cList*)safe_malloc(sizeof(cList));
+    //         switch(temp->type)
+    //         {
+    //             case Int:
+    //             {
+    //                 c->type = Int;
+    //                 c->integer = temp->integer;
+    //                 break;
+    //             }
+    //             case Double:
+    //             {
+    //                 c->type = Double;
+    //                 c->float_number = temp->float_number;
+    //                 break;
+    //             }
+    //             case MyList:
+    //             {
+    //                 c->type = MyList;
+    //                 c->new_List = temp->new_List;
+    //                 break;
+    //             }
+    //             case string_literal:
+    //             {
+    //                 c->type = String;
+    //                 c->string_literal = (char*)safe_malloc(sizeof(temp->string_literal));
+    //                 strncpy(c->string_literal, temp->string_literal, strlen(temp->string_literal));
+    //                 break;
+    //             }
+    //         }
+    //         temp1 = temp1->next_element;
+    //         tail->next_element = c;
+    //         tail = c;
+    //     }
+    //     tail->next_element = NULL;
+    //     dst->new_List = head->next_element;
+    //     free(head);
+    // }
     else if(src->type == String)
     {
         dst->type = String;
@@ -330,8 +375,33 @@ void copy_stype(stype* src, stype* dst)
     }
     else 
     {
-        *dst = *src;
+        //*dst = *src;
+        switch(src->type)
+        {
+            case Int:
+            {
+                dst->type = Int;
+                dst->iValue = src->iValue;
+                break;
+            }
+            case Double:
+            {
+                dst->type = Double;
+                dst->dValue = src->dValue;
+                break;
+            }
+            case MyList:
+            {
+                dst->type = MyList;
+                dst->new_List = src->new_List;
+                break;
+            }
+        }
     }
+    // if (dst->type == MyList) {
+    //     dst->new_List = (cList*)safe_malloc(sizeof(cList));
+    //     copy_cList(src->new_List, dst->new_List);
+    // }
 }
 
 void copy_cList(cList* src, cList*& dst)
