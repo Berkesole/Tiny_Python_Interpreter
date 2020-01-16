@@ -929,9 +929,6 @@ atom_expr   : atom  {
             | atom_expr  '.' ID
             {
                 $$ = $1;
-                // if($1->type==Identify)
-                // {
-                //     //$$->type = Function;
                 $$->function_name = $3;
             }
             | atom_expr  '(' arglist opt_comma ')'
