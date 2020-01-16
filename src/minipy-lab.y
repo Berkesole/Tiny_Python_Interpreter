@@ -1070,8 +1070,6 @@ atom_expr   : atom  {
                 }
             endFunction:
                 ;
-                //free($1);
-                //free_cList($3);
             }
             | atom_expr  '('  ')'
             {
