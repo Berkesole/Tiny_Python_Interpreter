@@ -932,8 +932,6 @@ atom_expr   : atom  {
                 // if($1->type==Identify)
                 // {
                 //     //$$->type = Function;
-                //     $$->function_name = $3->string_literal;
-                // }
                 $$->function_name = $3;
             }
             | atom_expr  '(' arglist opt_comma ')'
