@@ -3,11 +3,9 @@ A simple python interpreter implemented by yacc and lex and it is capable of int
 
 We leads the language of the translation the analysis the method to produce the language rule.
 
-![](https://github.com/Berkesole/Tiny_Python_Interpreter/blob/master/assets/example.png)
+This project is mainly contributed by [Ke Rui](https://github.com/Berkesole) and [Jiawei Wang](https://github.com/JarvisUSTC)
 
-## Authors
-[Ke Rui](https://github.com/Berkesole)   
-[Jiawei Wang](https://github.com/JarvisUSTC)
+![](https://github.com/Berkesole/Tiny_Python_Interpreter/blob/master/assets/example.png)
 
 ## Directory Structure
 - `src` : All the important code of Python_Interpreter
